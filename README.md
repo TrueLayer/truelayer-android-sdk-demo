@@ -56,15 +56,15 @@ sequenceDiagram
 	app ->>+ SDK: Start Coordinator Flow (PaymentContext)
 	SDK ->> SDK: Execute authorizatio flow
 
-	note left of app: Depending on the payment provider (the bank) <br/>there are two possible scenrios:<br/>redirect flow(1) or embeded flow(2).
+	note left of app: Depending on the payment provider (the bank) <br/>there are two possible scenrios:<br/>redirect flow(1) or embedded flow(2).
 
 	alt 1. Redirect flow
 	note left of app: Redirect flow involves launching<br/> the Bank app or Bank website.
 	SDK -->>+ Bank: Redirect to bank app
 	SDK --x app: Notify result
 	Bank -->>- app: Redirect after authorization process (with redirect uri eg. truelayer://demo )
-	else 2. Emmbeded flow
-		note left of app: Emmbeded flow covers entire process<br/> inside the SDK.
+	else 2. Embedded flow
+		note left of app: Embedded flow covers entire process<br/> inside the SDK.
 	SDK --x- app: Notify result
 	end
 
