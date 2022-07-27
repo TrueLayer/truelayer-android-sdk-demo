@@ -54,15 +54,24 @@ sequenceDiagram
 	app ->> backend: Create Payment
 	backend ->> app: Payment Context
 	app ->>+ SDK: Start Coordinator Flow (PaymentContext)
-	SDK ->> SDK: Execute authorization flow
-	alt Redirect flow
+	SDK ->> SDK: Execute authorizatio flow
+
+	note left of app: Depending on the payment provider (the bank) <br/>there are two possible scenrios:<br/>redirect flow(1) or embeded flow(2).
+
+	alt 1. Redirect flow
+	note left of app: Redirect flow involves launching<br/> the Bank app or Bank website.
+	rect rgb(222,222,222)
 	SDK -->>+ Bank: Redirect to bank app
-	
 	SDK --x app: Notify result
 	Bank -->>- app: Redirect after authorization process (with redirect uri eg. truelayer://demo )
-	else Emmbeded flow
+	end
+	else 2. Emmbeded flow
+		note left of app: Emmbeded flow covers entire process<br/> inside the SDK.
+	rect rgb(222,222,222)
 	SDK --x- app: Notify result
 	end
+	end
+
 	loop query paymetn status
 	note left of app: Query the payment status<br/>until payment is no longer<br/>in AUTHORISING state.
 	app ->> backend: Query payment staus
