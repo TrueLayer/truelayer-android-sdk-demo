@@ -60,16 +60,12 @@ sequenceDiagram
 
 	alt 1. Redirect flow
 	note left of app: Redirect flow involves launching<br/> the Bank app or Bank website.
-	rect rgb(222,222,222)
 	SDK -->>+ Bank: Redirect to bank app
 	SDK --x app: Notify result
 	Bank -->>- app: Redirect after authorization process (with redirect uri eg. truelayer://demo )
-	end
 	else 2. Emmbeded flow
 		note left of app: Emmbeded flow covers entire process<br/> inside the SDK.
-	rect rgb(222,222,222)
 	SDK --x- app: Notify result
-	end
 	end
 
 	loop query paymetn status
