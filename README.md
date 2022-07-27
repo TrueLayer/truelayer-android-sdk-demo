@@ -51,7 +51,7 @@ sequenceDiagram
 	app ->> backend: Create Payment
 	backend ->> app: Payment Context
 	app ->>+ SDK: Start Coordinator Flow (PaymentContext)
-	SDK ->> SDK: Execute authorizatio flow
+	SDK ->> SDK: Execute authorization flow
 	alt Redirect flow
 	SDK -->>+ Bank: Redirect to bank app
 	
