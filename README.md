@@ -33,10 +33,13 @@ mobileBackendUri="http://10.0.2.2:3000"
 The Configuration object allows you to easily modify the environment, payment type, and HTTP connection options for testing.
 ```kotlin
 object Configuration {  
- @JvmStatic val httpConfig = HttpConnectionConfiguration( timeoutMs = 5000, httpDebugLoggingLevel = HttpLoggingLevel.Body )  
- @JvmStatic val environment = Environment.DEVELOPMENT
- @JvmStatic val paymentType = PaymentType.GBP
- }
+   @JvmStatic val httpConfig = HttpConnectionConfiguration(
+       timeoutMs = 5000,
+       httpDebugLoggingLevel = HttpLoggingLevel.Body
+   )  
+   @JvmStatic val environment = Environment.DEVELOPMENT
+   @JvmStatic val paymentType = PaymentType.GBP
+}
 ```
 
 ## How does the payment flow with the SDK works?
