@@ -26,6 +26,8 @@ import com.truelayer.demo.ui.theme.PrimaryVariant
 import com.truelayer.demo.ui.theme.Secondary
 import com.truelayer.payments.core.domain.utils.Ok
 import com.truelayer.payments.core.domain.utils.errorOrNull
+import com.truelayer.payments.core.domain.utils.onError
+import com.truelayer.payments.core.domain.utils.onOk
 import com.truelayer.payments.ui.TrueLayerUI
 import com.truelayer.payments.ui.models.PaymentContext
 import com.truelayer.payments.ui.screens.coordinator.FlowCoordinator
@@ -80,12 +82,9 @@ class ComposeIntegrationActivity : AppCompatActivity() {
             var paymentContext by remember { mutableStateOf<PaymentContext?>(null) }
             var error by remember { mutableStateOf<String?>(null) }
             LaunchedEffect(true) {
-                val outcome = paymentContextProvider.getPaymentContext()
-                if (outcome is Ok) {
-                    paymentContext = outcome.value
-                } else {
-                    error = outcome.errorOrNull()?.localizedMessage
-                }
+                paymentContextProvider.getPaymentContext()
+                    .onOk { paymentContext = it }
+                    .onError { error = it.localizedMessage }
             }
             Theme(
                 theme = theme,
