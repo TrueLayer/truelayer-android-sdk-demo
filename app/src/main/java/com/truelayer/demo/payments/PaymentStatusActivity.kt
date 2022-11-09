@@ -94,9 +94,19 @@ class PaymentStatusActivity : AppCompatActivity() {
                     ) {
                         Text(text = stringResource(id = R.string.payment_status_title), style = MaterialTheme.typography.h5)
                         when (paymentStatus) {
-                            PaymentStatus.Status.AUTHORIZING,
-                            PaymentStatus.Status.AUTHORIZATION_REQUIRED -> {
+                            PaymentStatus.Status.AUTHORIZING -> {
+                                // If the SDK has done it's work already, it will be ok
+                                // to wait for status change
                                 CircularProgressIndicator()
+                            }
+                            PaymentStatus.Status.AUTHORIZATION_REQUIRED -> {
+                                // If you encounter this state, it's most likely that the SDK didn't
+                                // get chance to do its work yet. Start the CoordinatorFlow.
+                                // If the SDK has done its work, then this state would be considered
+                                // an error.
+                                // Because we are using this view to query the state of the payment
+                                // after redirect from the bank this should never happen.
+                                Image(imageVector = Icons.Filled.Error, contentDescription = null)
                             }
                             PaymentStatus.Status.AUTHORIZED,
                             PaymentStatus.Status.SETTLED,

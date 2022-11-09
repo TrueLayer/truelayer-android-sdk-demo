@@ -16,17 +16,13 @@ import com.truelayer.payments.ui.screens.coordinator.FlowCoordinatorResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.withContext
-import kotlin.coroutines.CoroutineContext
 
 /**
  * Example integration of the SDK with the Activity component
  */
 class ActivityIntegrationActivity : Activity() {
-
-    private val coroutineContext: CoroutineContext = newSingleThreadContext("PaymentContextProvider")
-    private val scope = CoroutineScope(coroutineContext)
+    private val scope = CoroutineScope(Dispatchers.IO)
     private val paymentContextProvider = PaymentContextProvider()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,8 +47,7 @@ class ActivityIntegrationActivity : Activity() {
 
     private suspend fun launchPaymentFlow() {
         // Create a payment context
-        val paymentContext = paymentContextProvider.getPaymentContext()
-        when (paymentContext) {
+        when (val paymentContext = paymentContextProvider.getPaymentContext()) {
             is Ok -> {
                 // Create an intent with the payment context to start the payment flow
                 val intent = FlowCoordinatorActivityContract().createIntent(
