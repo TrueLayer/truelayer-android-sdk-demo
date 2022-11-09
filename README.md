@@ -19,12 +19,7 @@ Payments Quickstart is a project that will allow you to instantly get up to spee
 >Beware this project is meant to be used for testing only, and the functionality behind (or at least part of it) will need to be implemented on your own backend service.
 
 ## Setup
-To fetch the SDK you'll need to add your credentials for the TrueLayer Artifactory to your `local.properties` file.
-```groovy
-artifactory.username=your.artifactory@user.name
-artifactory.apikey=Your-Artifactory-API-Key
-```
-To connect with Payments Quickstart you'll need to add its URI as well.
+To connect with Payments Quickstart you'll need to add its URI to your `local.properties` file.
 ```groovy  
 mobileBackendUri="http://10.0.2.2:3000"
 ```
@@ -34,10 +29,10 @@ The Configuration object allows you to easily modify the environment, payment ty
 ```kotlin
 object Configuration {  
    @JvmStatic val httpConfig = HttpConnectionConfiguration(
-       timeoutMs = 5000,
+       timeoutMs = 45000,
        httpDebugLoggingLevel = HttpLoggingLevel.Body
    )  
-   @JvmStatic val environment = Environment.DEVELOPMENT
+   @JvmStatic val environment = Environment.SANDBOX
    @JvmStatic val paymentType = PaymentType.GBP
 }
 ```
@@ -52,8 +47,8 @@ sequenceDiagram
 	participant Bank as Bank App
 
 	app ->> backend: Create Payment
-	backend ->> app: Payment Context
-	app ->>+ SDK: Start Coordinator Flow (PaymentContext)
+	backend ->> app: Processor Context
+	app ->>+ SDK: Start Processor Flow (ProcessorContext)
 	SDK ->> SDK: Execute authorizatio flow
 
 	note left of app: Depending on the payment provider (the bank) <br/>there are two possible scenrios:<br/>redirect flow(1) or embedded flow(2).

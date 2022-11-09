@@ -14,16 +14,16 @@ import com.truelayer.demo.payments.PaymentContextProvider;
 import com.truelayer.payments.core.domain.utils.Fail;
 import com.truelayer.payments.core.domain.utils.Ok;
 import com.truelayer.payments.ui.TrueLayerUI;
-import com.truelayer.payments.ui.models.PaymentContext;
-import com.truelayer.payments.ui.screens.coordinator.FlowCoordinatorActivityContract;
-import com.truelayer.payments.ui.screens.coordinator.FlowCoordinatorResult;
+import com.truelayer.payments.ui.screens.processor.ProcessorActivityContract;
+import com.truelayer.payments.ui.screens.processor.ProcessorContext;
+import com.truelayer.payments.ui.screens.processor.ProcessorResult;
 
 /**
  * Example integration of the SDK with Java and the AndroidX Activity
  */
 public class JavaIntegrationActivity extends AppCompatActivity {
 
-    private PaymentContextProvider paymentContextProvider = new PaymentContextProvider();
+    private final PaymentContextProvider paymentContextProvider = new PaymentContextProvider();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +41,10 @@ public class JavaIntegrationActivity extends AppCompatActivity {
         TrueLayerUI.init(getApplicationContext(), builder);
 
         // Create a contract to receive the results
-        FlowCoordinatorActivityContract contract = new FlowCoordinatorActivityContract();
+        ProcessorActivityContract contract = new ProcessorActivityContract();
         // Handle the result when returned at the end of the payment flow
-        ActivityResultLauncher<PaymentContext> flow = registerForActivityResult(contract,
-                (ActivityResultCallback<FlowCoordinatorResult>) result ->
+        ActivityResultLauncher<ProcessorContext> flow = registerForActivityResult(contract,
+                (ActivityResultCallback< ProcessorResult>) result ->
                         Toast.makeText(this, result.toString(), Toast.LENGTH_LONG).show()
         );
 
@@ -54,12 +54,12 @@ public class JavaIntegrationActivity extends AppCompatActivity {
         });
     }
 
-    private void launchPaymentFlow(ActivityResultLauncher<PaymentContext> flow) {
+    private void launchPaymentFlow(ActivityResultLauncher<ProcessorContext> flow) {
         // Create a payment context
        paymentContextProvider.getPaymentContext(paymentContextOutcome -> {
             if(paymentContextOutcome instanceof Ok) {
                 // Start the payment flow
-                flow.launch(((Ok<PaymentContext>) paymentContextOutcome).getValue());
+                flow.launch(((Ok<ProcessorContext>) paymentContextOutcome).getValue());
             }
             else if(paymentContextOutcome instanceof Fail) {
                 // Display error if payment context creation failed

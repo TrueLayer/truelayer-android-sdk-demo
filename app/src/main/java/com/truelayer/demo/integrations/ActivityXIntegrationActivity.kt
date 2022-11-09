@@ -11,8 +11,8 @@ import com.truelayer.demo.payments.PaymentContextProvider
 import com.truelayer.payments.core.domain.utils.Fail
 import com.truelayer.payments.core.domain.utils.Ok
 import com.truelayer.payments.ui.TrueLayerUI
-import com.truelayer.payments.ui.models.PaymentContext
-import com.truelayer.payments.ui.screens.coordinator.FlowCoordinatorActivityContract
+import com.truelayer.payments.ui.screens.processor.ProcessorActivityContract
+import com.truelayer.payments.ui.screens.processor.ProcessorContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -38,7 +38,7 @@ class ActivityXIntegrationActivity : AppCompatActivity() {
         }
 
         // Create a contract to receive the results
-        val contract = FlowCoordinatorActivityContract()
+        val contract = ProcessorActivityContract()
 
         // Handle the result when returned at the end of the payment flow
         val flow = registerForActivityResult(contract) {
@@ -53,7 +53,7 @@ class ActivityXIntegrationActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun launchPaymentFlow(flow: ActivityResultLauncher<PaymentContext>) {
+    private suspend fun launchPaymentFlow(flow: ActivityResultLauncher<ProcessorContext>) {
         // Create a payment context
         when (val paymentContext = paymentContextProvider.getPaymentContext()) {
             is Ok -> {
