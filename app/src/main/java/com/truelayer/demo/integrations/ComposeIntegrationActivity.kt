@@ -1,7 +1,6 @@
 package com.truelayer.demo.integrations
 
 import android.os.Bundle
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -17,7 +16,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.core.view.WindowCompat
 import com.truelayer.demo.Configuration
 import com.truelayer.demo.payments.PaymentContextProvider
 import com.truelayer.demo.ui.theme.Primary
@@ -31,7 +29,6 @@ import com.truelayer.payments.ui.screens.processor.ProcessorContext
 import com.truelayer.payments.ui.screens.processor.ProcessorResult
 import com.truelayer.payments.ui.theme.*
 
-
 /**
  * Example integration of the SDK with the Jetpack Compose
  */
@@ -41,11 +38,6 @@ class ComposeIntegrationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // The following lines are required for the accompanist-ui-insets to work properly
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        @Suppress("DEPRECATION")
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
         // Initialise the payments configuration
         TrueLayerUI.init(context = applicationContext) {
