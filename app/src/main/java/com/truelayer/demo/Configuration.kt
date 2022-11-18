@@ -1,6 +1,5 @@
 package com.truelayer.demo
 
-import com.truelayer.payments.core.domain.configuration.Environment
 import com.truelayer.payments.core.domain.configuration.HttpConnectionConfiguration
 import com.truelayer.payments.core.domain.configuration.HttpLoggingLevel
 
@@ -15,14 +14,12 @@ object Configuration {
     )
 
     @JvmStatic
-    val environment = Environment.SANDBOX
-
-    @JvmStatic
     val paymentType = PaymentType.GBP
 }
 
 enum class PaymentType {
     EUR,
     GBP,
-    GBP_PRESELECTED
+    GBP_PRESELECTED,
+    MANDATE
 }

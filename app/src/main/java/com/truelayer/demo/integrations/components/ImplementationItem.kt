@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 
 /**
- * UI component to represent and integration of the SDK and launch it's respective Activity
+ * UI component to represent an integration of the SDK and launch it's respective Activity
  */
 @ExperimentalMaterialApi
 @Composable

@@ -4,14 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Divider
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Scaffold
+import androidx.compose.material.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -23,7 +23,10 @@ import com.truelayer.demo.integrations.ComposeIntegrationActivity
 import com.truelayer.demo.integrations.Implementation
 import com.truelayer.demo.integrations.JavaIntegrationActivity
 import com.truelayer.demo.integrations.components.ImplementationItem
+import com.truelayer.demo.integrations.components.TextWithDropdownMenu
 import com.truelayer.demo.ui.theme.SDKDemoTheme
+import com.truelayer.demo.utils.PrefUtils
+import com.truelayer.payments.core.domain.configuration.Environment
 
 /**
  * Activity listing the various integration types for the SDK
@@ -59,25 +62,56 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             val context = LocalContext.current
+            var apiUrl by remember { mutableStateOf(PrefUtils.getQuickstartUrl(this)) }
+            var env by remember { mutableStateOf(PrefUtils.getEnvironment(this)) }
 
             SDKDemoTheme {
                 Scaffold(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxSize().padding(top = 16.dp)
+                ) { paddingValues ->
+                    Column(
+                        Modifier.padding(paddingValues)
                     ) {
-                        items(implementations) { implementation ->
-                            ImplementationItem(
-                                name = stringResource(implementation.name),
-                                image = painterResource(implementation.icon),
-                                onClick = {
-                                    val intent = Intent(context, implementation.activity)
-                                    intent.data = implementation.data
-                                    startActivity(intent)
+                        Text(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            text = stringResource(id = R.string.config_api_label)
+                        )
+
+                        Row {
+                            TextField(
+                                modifier = Modifier.fillMaxWidth(0.7f).padding(horizontal = 16.dp),
+                                value = apiUrl,
+                                onValueChange = {
+                                    apiUrl = it
+                                    PrefUtils.setQuickstartUrl(it, this@MainActivity)
                                 }
                             )
-                            Divider(modifier = Modifier.padding(start = 8.dp))
+
+                            TextWithDropdownMenu(
+                                label = env.name,
+                                dropdownItems = Environment.values().map { it.name to it },
+                                onClick = {
+                                    env = it
+                                    PrefUtils.setEnvironment(it, this@MainActivity)
+                                }
+                            )
+                        }
+
+                        LazyColumn(
+                            modifier = Modifier.fillMaxWidth()
+
+                        ) {
+                            items(implementations) { implementation ->
+                                ImplementationItem(
+                                    name = stringResource(implementation.name),
+                                    image = painterResource(implementation.icon),
+                                    onClick = {
+                                        val intent = Intent(context, implementation.activity)
+                                        startActivity(intent)
+                                    }
+                                )
+                                Divider(modifier = Modifier.padding(start = 8.dp))
+                            }
                         }
                     }
                 }

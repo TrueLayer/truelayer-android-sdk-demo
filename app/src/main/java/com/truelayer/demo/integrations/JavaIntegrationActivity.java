@@ -10,7 +10,8 @@ import android.widget.Toast;
 import com.truelayer.demo.Configuration;
 import com.truelayer.demo.R;
 import com.truelayer.demo.databinding.ActivityIntegrationBinding;
-import com.truelayer.demo.payments.PaymentContextProvider;
+import com.truelayer.demo.payments.ProcessorContextProvider;
+import com.truelayer.demo.utils.PrefUtils;
 import com.truelayer.payments.core.domain.utils.Fail;
 import com.truelayer.payments.core.domain.utils.Ok;
 import com.truelayer.payments.ui.TrueLayerUI;
@@ -23,19 +24,21 @@ import com.truelayer.payments.ui.screens.processor.ProcessorResult;
  */
 public class JavaIntegrationActivity extends AppCompatActivity {
 
-    private final PaymentContextProvider paymentContextProvider = new PaymentContextProvider();
+    private ProcessorContextProvider processorContextProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_integration);
 
+        processorContextProvider = new ProcessorContextProvider(PrefUtils.getQuickstartUrl(this));
+
         ActivityIntegrationBinding binding = ActivityIntegrationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Initialise the payments configuration
         TrueLayerUI.Builder builder = new TrueLayerUI.Builder()
-                .environment(Configuration.getEnvironment())
+                .environment(PrefUtils.getEnvironment(this))
                 .httpConnection(Configuration.getHttpConfig());
 
         TrueLayerUI.init(getApplicationContext(), builder);
@@ -48,24 +51,23 @@ public class JavaIntegrationActivity extends AppCompatActivity {
                         Toast.makeText(this, result.toString(), Toast.LENGTH_LONG).show()
         );
 
-        binding.titleTextView.setText(R.string.integration_java);
-        binding.launchPaymentButton.setOnClickListener(v -> {
-            launchPaymentFlow(flow);
+        binding.launchButton.setOnClickListener(v -> {
+            launchFlow(flow);
         });
     }
 
-    private void launchPaymentFlow(ActivityResultLauncher<ProcessorContext> flow) {
+    private void launchFlow(ActivityResultLauncher<ProcessorContext> flow) {
         // Create a payment context
-       paymentContextProvider.getPaymentContext(paymentContextOutcome -> {
-            if(paymentContextOutcome instanceof Ok) {
+       processorContextProvider.getProcessorContext(contextOutcome -> {
+            if(contextOutcome instanceof Ok) {
                 // Start the payment flow
-                flow.launch(((Ok<ProcessorContext>) paymentContextOutcome).getValue());
+                flow.launch(((Ok<ProcessorContext>) contextOutcome).getValue());
             }
-            else if(paymentContextOutcome instanceof Fail) {
+            else if(contextOutcome instanceof Fail) {
                 // Display error if payment context creation failed
                 Toast.makeText(
                         this,
-                "Unable to get payment context: " + ((Fail<?>) paymentContextOutcome).getError(),
+                "Unable to get processor context: " + ((Fail<?>) contextOutcome).getError(),
                         Toast.LENGTH_LONG
                     ).show();
             }

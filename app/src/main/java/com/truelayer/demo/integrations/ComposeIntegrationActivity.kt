@@ -17,10 +17,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.truelayer.demo.Configuration
-import com.truelayer.demo.payments.PaymentContextProvider
+import com.truelayer.demo.payments.ProcessorContextProvider
 import com.truelayer.demo.ui.theme.Primary
 import com.truelayer.demo.ui.theme.PrimaryDark
 import com.truelayer.demo.ui.theme.Secondary
+import com.truelayer.demo.utils.PrefUtils
 import com.truelayer.payments.core.domain.utils.onError
 import com.truelayer.payments.core.domain.utils.onOk
 import com.truelayer.payments.ui.TrueLayerUI
@@ -34,14 +35,16 @@ import com.truelayer.payments.ui.theme.*
  */
 class ComposeIntegrationActivity : AppCompatActivity() {
 
-    private val paymentContextProvider = PaymentContextProvider()
+    private lateinit var processorContextProvider: ProcessorContextProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        processorContextProvider = ProcessorContextProvider(PrefUtils.getQuickstartUrl(this))
+
         // Initialise the payments configuration
         TrueLayerUI.init(context = applicationContext) {
-            environment = Configuration.environment
+            environment = PrefUtils.getEnvironment(this@ComposeIntegrationActivity)
             httpConnection = Configuration.httpConfig
         }
 
@@ -62,11 +65,11 @@ class ComposeIntegrationActivity : AppCompatActivity() {
             var flowResult by remember {
                 mutableStateOf<ProcessorResult?>(null)
             }
-            var paymentContext by remember { mutableStateOf<ProcessorContext?>(null) }
+            var processorContext by remember { mutableStateOf<ProcessorContext?>(null) }
             var error by remember { mutableStateOf<String?>(null) }
             LaunchedEffect(true) {
-                paymentContextProvider.getPaymentContext()
-                    .onOk { paymentContext = it }
+                processorContextProvider.getProcessorContext()
+                    .onOk { processorContext = it }
                     .onError { error = it.localizedMessage }
             }
             Theme(
@@ -79,12 +82,12 @@ class ComposeIntegrationActivity : AppCompatActivity() {
                     error != null -> {
                         Toast.makeText(
                             this@ComposeIntegrationActivity,
-                            "Unable to get payment context: $error",
+                            "Unable to get processor context: $error",
                             Toast.LENGTH_LONG
                         ).show()
                         this@ComposeIntegrationActivity.finish()
                     }
-                    paymentContext == null -> {
+                    processorContext == null -> {
                         Column(
                             modifier = Modifier.fillMaxSize(),
                             verticalArrangement = Arrangement.Center,
@@ -94,9 +97,9 @@ class ComposeIntegrationActivity : AppCompatActivity() {
                             Text("Authenticating")
                         }
                     }
-                    paymentContext != null && flowResult == null -> {
+                    processorContext != null && flowResult == null -> {
                         Processor(
-                            context = paymentContext!!,
+                            context = processorContext!!,
                             onSuccess = { flowResult = it },
                             onFailure = { flowResult = it }
                         )

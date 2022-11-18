@@ -18,11 +18,13 @@ import kotlinx.coroutines.launch
  */
 class PaymentStatusViewModel(
     private val paymentId: String?,
+    private val mandateId: String?,
+    private val apiUrl: String,
     private val retryInterval: Long = 2_000,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 
-    private val paymentContextProvider = PaymentContextProvider()
+    private val processorContextProvider = ProcessorContextProvider(apiUrl)
 
     private val _status = MutableStateFlow(PaymentStatus.Status.AUTHORIZING)
     val status: StateFlow<PaymentStatus.Status> = _status
@@ -39,7 +41,7 @@ class PaymentStatusViewModel(
             while (canRetry) {
                 retryCount -= 1
                 canRetry = retryCount > 0
-                when (val paymentStatus = paymentContextProvider.getPaymentStatus(paymentId!!)) {
+                when (val paymentStatus = processorContextProvider.getPaymentStatus(paymentId!!)) {
                     is Ok -> {
                         if (paymentStatus.value.status != PaymentStatus.Status.AUTHORIZED && canRetry) {
                             delay(retryInterval)
@@ -57,9 +59,45 @@ class PaymentStatusViewModel(
             }
         }
     }
+
+    // Polls the mandate status API to receive updates to the payment
+    fun pollMandateStatus() {
+        _status.tryEmit(PaymentStatus.Status.AUTHORIZING)
+        viewModelScope.launch(dispatcher) {
+            var retryCount = 5
+            var canRetry = true
+            while (canRetry) {
+                retryCount -= 1
+                canRetry = retryCount > 0
+                when (val mandateStatus = processorContextProvider.getMandateStatus(mandateId!!)) {
+                    is Ok -> {
+                        if (mandateStatus.value.status != PaymentStatus.Status.AUTHORIZED && canRetry) {
+                            delay(retryInterval)
+                            continue
+                        } else {
+                            _status.emit(mandateStatus.value.status)
+                            break
+                        }
+                    }
+                    is Fail -> {
+                        _error.emit(mandateStatus.error.localizedMessage ?: "Unknown Error")
+                        break
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Suppress("UNCHECKED_CAST")
-internal fun paymentStatusViewModel(paymentId: String?) = object : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T = PaymentStatusViewModel(paymentId) as T
+internal fun paymentStatusViewModel(
+    paymentId: String?,
+    mandateId: String?,
+    apiUrl: String
+) = object : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T = PaymentStatusViewModel(
+        paymentId = paymentId,
+        mandateId = mandateId,
+        apiUrl = apiUrl
+    ) as T
 }
