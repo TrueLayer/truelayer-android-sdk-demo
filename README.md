@@ -18,24 +18,12 @@ Payments Quickstart is a project that will allow you to instantly get up to spee
 
 >Beware this project is meant to be used for testing only, and the functionality behind (or at least part of it) will need to be implemented on your own backend service.
 
-## Setup
-To connect with Payments Quickstart you'll need to add its URI to your `local.properties` file.
-```groovy  
-mobileBackendUri="http://10.0.2.2:3000"
-```
-
 ## Configuration
-The Configuration object allows you to easily modify the environment, payment type, and HTTP connection options for testing.
-```kotlin
-object Configuration {  
-   @JvmStatic val httpConfig = HttpConnectionConfiguration(
-       timeoutMs = 45000,
-       httpDebugLoggingLevel = HttpLoggingLevel.Body
-   )  
-   @JvmStatic val environment = Environment.SANDBOX
-   @JvmStatic val paymentType = PaymentType.GBP
-}
-```
+<p align="center">
+    <img height="300px" src="./screenshot.png" />
+</p>
+The app allows you to configure your use of the Payments Quickstart API within the app. You'll need to add the URI to the API in the required field and select
+the correct environment. And you can change the type of payment that is created.
 
 ## How does the payment flow with the SDK works?
 
