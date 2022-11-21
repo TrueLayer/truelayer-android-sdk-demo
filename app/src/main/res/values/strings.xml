@@ -7,4 +7,5 @@
     <string name="button_launch">Launch Flow</string>
     <string name="status_title">Status</string>
     <string name="config_api_label">Enter your Payments Quickstart URL</string>
+    <string name="processor_context_error">Unable to get processor context: %1s</string>
 </resources>

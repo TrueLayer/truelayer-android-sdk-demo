@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
+import com.truelayer.demo.R
 import com.truelayer.demo.databinding.ActivityIntegrationBinding
 import com.truelayer.demo.payments.ProcessorContextProvider
 import com.truelayer.demo.utils.PrefUtils
@@ -46,7 +47,7 @@ class ActivityXIntegrationActivity : AppCompatActivity() {
         // Create a contract to receive the results
         val contract = ProcessorActivityContract()
 
-        // Handle the result when returned at the end of the payment flow
+        // Handle the result returned from the SDK at the end of the payment flow
         val flow = registerForActivityResult(contract) {
             Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
         }
@@ -71,7 +72,7 @@ class ActivityXIntegrationActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(
                         this@ActivityXIntegrationActivity,
-                        "Unable to get processor context: ${processorContext.error}",
+                        getString(R.string.processor_context_error, processorContext.error),
                         Toast.LENGTH_LONG
                     ).show()
                 }

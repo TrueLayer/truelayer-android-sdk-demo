@@ -50,7 +50,8 @@ public class JavaIntegrationActivity extends AppCompatActivity {
 
         // Create a contract to receive the results
         ProcessorActivityContract contract = new ProcessorActivityContract();
-        // Handle the result when returned at the end of the payment flow
+
+        // Handle the result returned from the SDK at the end of the payment flow
         ActivityResultLauncher<ProcessorContext> flow = registerForActivityResult(contract,
                 (ActivityResultCallback< ProcessorResult>) result ->
                         Toast.makeText(this, result.toString(), Toast.LENGTH_LONG).show()
@@ -71,7 +72,7 @@ public class JavaIntegrationActivity extends AppCompatActivity {
                 // Display error if payment context creation failed
                 Toast.makeText(
                         this,
-                "Unable to get processor context: " + ((Fail<?>) contextOutcome).getError(),
+                        getString(R.string.processor_context_error, ((Fail<?>) contextOutcome).getError()),
                         Toast.LENGTH_LONG
                     ).show();
             }

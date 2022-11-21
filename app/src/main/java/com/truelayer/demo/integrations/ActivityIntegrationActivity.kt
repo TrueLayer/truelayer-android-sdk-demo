@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import com.truelayer.demo.R
 import com.truelayer.demo.databinding.ActivityIntegrationBinding
 import com.truelayer.demo.payments.ProcessorContextProvider
 import com.truelayer.demo.utils.PrefUtils
@@ -64,18 +65,20 @@ class ActivityIntegrationActivity : Activity() {
                 startActivityForResult(intent, 0)
             }
             is Fail -> withContext(Dispatchers.Main) {
+                // Display error if payment context creation failed
                 Toast.makeText(
                     this@ActivityIntegrationActivity,
-                    "Unable to get processor context: ${processorContext.error}",
+                    getString(R.string.processor_context_error, processorContext.error),
                     Toast.LENGTH_LONG
                 ).show()
             }
         }
     }
 
+    // Handle the result returned from the SDK at the end of the payment flow
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        // Retrieve the result of the payment flow
+        // Extract the result of the payment flow from the intent
         val result = ProcessorResult.unwrapResult(data)
         Toast.makeText(this, result.toString(), Toast.LENGTH_LONG).show()
     }

@@ -16,6 +16,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.truelayer.demo.R
 import com.truelayer.demo.payments.ProcessorContextProvider
 import com.truelayer.demo.ui.theme.Primary
 import com.truelayer.demo.ui.theme.PrimaryDark
@@ -89,14 +91,16 @@ class ComposeIntegrationActivity : AppCompatActivity() {
                 }
             ) {
                 when {
+                    // Display any errors that occur when creating a payment/mandate
                     error != null -> {
                         Toast.makeText(
                             this@ComposeIntegrationActivity,
-                            "Unable to get processor context: $error",
+                            stringResource(id = R.string.processor_context_error, error!!),
                             Toast.LENGTH_LONG
                         ).show()
                         this@ComposeIntegrationActivity.finish()
                     }
+                    // Display loading UI while payment/mandate is being created
                     processorContext == null -> {
                         Column(
                             modifier = Modifier.fillMaxSize(),
@@ -107,6 +111,7 @@ class ComposeIntegrationActivity : AppCompatActivity() {
                             Text("Authenticating")
                         }
                     }
+                    // Launch the SDK with the ProcessorContext for the payment/mandate created
                     processorContext != null && flowResult == null -> {
                         Processor(
                             context = processorContext!!,
@@ -114,6 +119,7 @@ class ComposeIntegrationActivity : AppCompatActivity() {
                             onFailure = { flowResult = it }
                         )
                     }
+                    // Display the result of the payment/mandate flow
                     flowResult != null -> {
                         Toast.makeText(this, flowResult.toString(), Toast.LENGTH_LONG).show()
                         this@ComposeIntegrationActivity.finish()
