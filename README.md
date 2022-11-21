@@ -9,7 +9,7 @@ This project provides examples for integrating the [TrueLayer Android SDK](https
 
 ## Before you begin
 Register `truelayer://demo` as a `redirect_uri` in your [developer console](https://console.truelayer.com). This is used at the end of the payment journey to redirect back to this app.
-> You may register a different scheme but then you need to modify the `Manifest` file and `PaymentContextProvider.redirectUri` property.
+> You may register a different scheme but then you need to modify the `Manifest` file and `ProcessorContextProvider.redirectUri` property.
 
 ## API Setup
 This app uses our [Payments Quickstart API](https://github.com/TrueLayer/payments-quickstart) to simplify the process of creating payments 

@@ -4,10 +4,11 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
-import com.truelayer.demo.Configuration
 import com.truelayer.demo.databinding.ActivityIntegrationBinding
 import com.truelayer.demo.payments.ProcessorContextProvider
 import com.truelayer.demo.utils.PrefUtils
+import com.truelayer.payments.core.domain.configuration.HttpConnectionConfiguration
+import com.truelayer.payments.core.domain.configuration.HttpLoggingLevel
 import com.truelayer.payments.core.domain.utils.Fail
 import com.truelayer.payments.core.domain.utils.Ok
 import com.truelayer.payments.ui.TrueLayerUI
@@ -37,7 +38,9 @@ class ActivityXIntegrationActivity : AppCompatActivity() {
         // Initialise the payments configuration
         TrueLayerUI.init(context = applicationContext) {
             environment = PrefUtils.getEnvironment(this@ActivityXIntegrationActivity)
-            httpConnection = Configuration.httpConfig
+            httpConnection = HttpConnectionConfiguration(
+                httpDebugLoggingLevel = HttpLoggingLevel.None
+            )
         }
 
         // Create a contract to receive the results
@@ -56,8 +59,9 @@ class ActivityXIntegrationActivity : AppCompatActivity() {
     }
 
     private suspend fun launchFlow(flow: ActivityResultLauncher<ProcessorContext>) {
+        val paymentType = PrefUtils.getPaymentType(this)
         // Create a payment context
-        when (val processorContext = processorContextProvider.getProcessorContext()) {
+        when (val processorContext = processorContextProvider.getProcessorContext(paymentType)) {
             is Ok -> {
                 // Start the payment flow
                 flow.launch(processorContext.value)

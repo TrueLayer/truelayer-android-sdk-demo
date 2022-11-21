@@ -4,15 +4,24 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -24,6 +33,7 @@ import com.truelayer.demo.integrations.Implementation
 import com.truelayer.demo.integrations.JavaIntegrationActivity
 import com.truelayer.demo.integrations.components.ImplementationItem
 import com.truelayer.demo.integrations.components.TextWithDropdownMenu
+import com.truelayer.demo.payments.PaymentType
 import com.truelayer.demo.ui.theme.SDKDemoTheme
 import com.truelayer.demo.utils.PrefUtils
 import com.truelayer.payments.core.domain.configuration.Environment
@@ -33,7 +43,7 @@ import com.truelayer.payments.core.domain.configuration.Environment
  */
 class MainActivity : AppCompatActivity() {
 
-    @OptIn(ExperimentalMaterialApi::class)
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -64,6 +74,7 @@ class MainActivity : AppCompatActivity() {
             val context = LocalContext.current
             var apiUrl by remember { mutableStateOf(PrefUtils.getQuickstartUrl(this)) }
             var env by remember { mutableStateOf(PrefUtils.getEnvironment(this)) }
+            var paymentType by remember { mutableStateOf(PrefUtils.getPaymentType(this)) }
 
             SDKDemoTheme {
                 Scaffold(
@@ -72,22 +83,33 @@ class MainActivity : AppCompatActivity() {
                     Column(
                         Modifier.padding(paddingValues)
                     ) {
-                        Text(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            text = stringResource(id = R.string.config_api_label)
+                        TextField(
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                            value = apiUrl,
+                            label = {
+                                Text(stringResource(id = R.string.config_api_label))
+                            },
+                            onValueChange = {
+                                apiUrl = it
+                                PrefUtils.setQuickstartUrl(it, this@MainActivity)
+                            }
                         )
 
-                        Row {
-                            TextField(
-                                modifier = Modifier.fillMaxWidth(0.7f).padding(horizontal = 16.dp),
-                                value = apiUrl,
-                                onValueChange = {
-                                    apiUrl = it
-                                    PrefUtils.setQuickstartUrl(it, this@MainActivity)
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 16.dp)
+                        ) {
+                            TextWithDropdownMenu(
+                                modifier = Modifier.weight(1f),
+                                label = paymentType.name,
+                                dropdownItems = PaymentType.values().map { it.name to it },
+                                onClick = {
+                                    paymentType = it
+                                    PrefUtils.setPaymentType(it, this@MainActivity)
                                 }
                             )
 
                             TextWithDropdownMenu(
+                                modifier = Modifier.weight(1f),
                                 label = env.name,
                                 dropdownItems = Environment.values().map { it.name to it },
                                 onClick = {
@@ -98,8 +120,7 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         LazyColumn(
-                            modifier = Modifier.fillMaxWidth()
-
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
                         ) {
                             items(implementations) { implementation ->
                                 ImplementationItem(
@@ -110,7 +131,7 @@ class MainActivity : AppCompatActivity() {
                                         startActivity(intent)
                                     }
                                 )
-                                Divider(modifier = Modifier.padding(start = 8.dp))
+                                Divider(modifier = Modifier.padding(all = 4.dp), color = Color.Transparent)
                             }
                         }
                     }

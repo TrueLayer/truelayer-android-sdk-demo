@@ -7,11 +7,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.truelayer.demo.Configuration;
+import com.truelayer.demo.payments.PaymentType;
 import com.truelayer.demo.R;
 import com.truelayer.demo.databinding.ActivityIntegrationBinding;
 import com.truelayer.demo.payments.ProcessorContextProvider;
 import com.truelayer.demo.utils.PrefUtils;
+import com.truelayer.payments.core.domain.configuration.HttpConnectionConfiguration;
+import com.truelayer.payments.core.domain.configuration.HttpLoggingLevel;
 import com.truelayer.payments.core.domain.utils.Fail;
 import com.truelayer.payments.core.domain.utils.Ok;
 import com.truelayer.payments.ui.TrueLayerUI;
@@ -39,7 +41,10 @@ public class JavaIntegrationActivity extends AppCompatActivity {
         // Initialise the payments configuration
         TrueLayerUI.Builder builder = new TrueLayerUI.Builder()
                 .environment(PrefUtils.getEnvironment(this))
-                .httpConnection(Configuration.getHttpConfig());
+                .httpConnection(new HttpConnectionConfiguration(
+                        45000,
+                        HttpLoggingLevel.None
+                ));
 
         TrueLayerUI.init(getApplicationContext(), builder);
 
@@ -51,14 +56,13 @@ public class JavaIntegrationActivity extends AppCompatActivity {
                         Toast.makeText(this, result.toString(), Toast.LENGTH_LONG).show()
         );
 
-        binding.launchButton.setOnClickListener(v -> {
-            launchFlow(flow);
-        });
+        binding.launchButton.setOnClickListener(v -> launchFlow(flow));
     }
 
     private void launchFlow(ActivityResultLauncher<ProcessorContext> flow) {
+        PaymentType paymentType = PrefUtils.getPaymentType(this);
         // Create a payment context
-       processorContextProvider.getProcessorContext(contextOutcome -> {
+        processorContextProvider.getProcessorContext(paymentType, contextOutcome -> {
             if(contextOutcome instanceof Ok) {
                 // Start the payment flow
                 flow.launch(((Ok<ProcessorContext>) contextOutcome).getValue());
@@ -72,6 +76,6 @@ public class JavaIntegrationActivity extends AppCompatActivity {
                     ).show();
             }
             return null;
-       });
+        });
     }
 }

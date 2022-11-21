@@ -4,10 +4,11 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import com.truelayer.demo.Configuration
 import com.truelayer.demo.databinding.ActivityIntegrationBinding
 import com.truelayer.demo.payments.ProcessorContextProvider
 import com.truelayer.demo.utils.PrefUtils
+import com.truelayer.payments.core.domain.configuration.HttpConnectionConfiguration
+import com.truelayer.payments.core.domain.configuration.HttpLoggingLevel
 import com.truelayer.payments.core.domain.utils.Fail
 import com.truelayer.payments.core.domain.utils.Ok
 import com.truelayer.payments.ui.TrueLayerUI
@@ -37,7 +38,9 @@ class ActivityIntegrationActivity : Activity() {
         // Initialise the payments configuration
         TrueLayerUI.init(context = applicationContext) {
             environment = PrefUtils.getEnvironment(this@ActivityIntegrationActivity)
-            httpConnection = Configuration.httpConfig
+            httpConnection = HttpConnectionConfiguration(
+                httpDebugLoggingLevel = HttpLoggingLevel.None
+            )
         }
 
         binding.launchButton.setOnClickListener {
@@ -48,8 +51,9 @@ class ActivityIntegrationActivity : Activity() {
     }
 
     private suspend fun launchPaymentFlow() {
+        val paymentType = PrefUtils.getPaymentType(this)
         // Create a payment context
-        when (val processorContext = processorContextProvider.getProcessorContext()) {
+        when (val processorContext = processorContextProvider.getProcessorContext(paymentType)) {
             is Ok -> {
                 // Create an intent with the payment context to start the payment flow
                 val intent = ProcessorActivityContract().createIntent(

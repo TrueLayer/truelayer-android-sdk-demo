@@ -1,8 +1,6 @@
 package com.truelayer.demo.payments
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.truelayer.demo.Configuration
-import com.truelayer.demo.PaymentType
 import com.truelayer.demo.payments.api.PaymentRequest
 import com.truelayer.demo.payments.api.PaymentService
 import com.truelayer.demo.payments.api.PaymentStatus
@@ -43,12 +41,12 @@ class ProcessorContextProvider(
     }
 
     // Generates a payment context to be used for testing integrations
-    suspend fun getProcessorContext(): Outcome<ProcessorContext, Throwable> {
+    suspend fun getProcessorContext(paymentType: PaymentType): Outcome<ProcessorContext, Throwable> {
         val service = createPaymentService()
         val paymentRequest = createRequest()
 
         return try {
-            val payment = when (Configuration.paymentType) {
+            val payment = when (paymentType) {
                 PaymentType.GBP -> service.createGBPPayment(paymentRequest)
                 PaymentType.EUR -> service.createEuroPayment(paymentRequest)
                 PaymentType.GBP_PRESELECTED -> service.createPreSelectedProviderPayment(
@@ -57,7 +55,7 @@ class ProcessorContextProvider(
                 PaymentType.MANDATE -> service.createMandate(paymentRequest)
             }
 
-            val context = if (Configuration.paymentType == PaymentType.MANDATE) {
+            val context = if (paymentType == PaymentType.MANDATE) {
                 ProcessorContext.MandateContext(payment.id, payment.resourceToken, redirectUri)
             } else {
                 PaymentContext(payment.id, payment.resourceToken, redirectUri)
@@ -71,10 +69,10 @@ class ProcessorContextProvider(
 
     // Generates a payment context to be used for testing integrations and returns results with lambda
     @OptIn(DelicateCoroutinesApi::class)
-    fun getProcessorContext(callback: (Outcome<ProcessorContext, Throwable>) -> Unit) {
+    fun getProcessorContext(paymentType: PaymentType, callback: (Outcome<ProcessorContext, Throwable>) -> Unit) {
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
-                callback(getProcessorContext())
+                callback(getProcessorContext(paymentType))
             }
         }
     }
@@ -107,7 +105,7 @@ class ProcessorContextProvider(
     @OptIn(ExperimentalSerializationApi::class)
     private fun createPaymentService(): PaymentService {
         val interceptor = HttpLoggingInterceptor()
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+            .setLevel(HttpLoggingInterceptor.Level.BODY)
         val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
 
         return Retrofit.Builder()
