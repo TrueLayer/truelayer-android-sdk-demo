@@ -9,13 +9,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Error
-import androidx.compose.runtime.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -71,7 +72,7 @@ class PaymentStatusActivity : AppCompatActivity() {
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         modifier = Modifier.padding(horizontal = 16.dp)
                     ) {
-                        Text(text = stringResource(id = R.string.status_title), style = MaterialTheme.typography.h5)
+                        Text(text = stringResource(id = R.string.status_title), style = MaterialTheme.typography.titleMedium)
                         when (status) {
                             PaymentStatus.Status.AUTHORIZING -> {
                                 // If the SDK has done it's work already, it will be ok
@@ -101,7 +102,7 @@ class PaymentStatusActivity : AppCompatActivity() {
                             }
                         }
 
-                        Text(text = status.toString(), style = MaterialTheme.typography.body1)
+                        Text(text = status.toString(), style = MaterialTheme.typography.bodyLarge)
                         Text(text = error, color = Color.Red)
                     }
                 }
