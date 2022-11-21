@@ -2,6 +2,7 @@ package com.truelayer.demo
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
@@ -127,8 +128,16 @@ class MainActivity : AppCompatActivity() {
                                     name = stringResource(implementation.name),
                                     image = painterResource(implementation.icon),
                                     onClick = {
-                                        val intent = Intent(context, implementation.activity)
-                                        startActivity(intent)
+                                        if (apiUrl.isBlank()) {
+                                            Toast.makeText(
+                                                this@MainActivity,
+                                                "Missing Payments Quickstart URL",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        } else {
+                                            val intent = Intent(context, implementation.activity)
+                                            startActivity(intent)
+                                        }
                                     }
                                 )
                                 Divider(modifier = Modifier.padding(all = 4.dp), color = Color.Transparent)
