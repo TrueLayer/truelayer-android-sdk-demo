@@ -10,19 +10,19 @@ import com.truelayer.demo.payments.api.PaymentStatus
 import com.truelayer.payments.core.domain.utils.Fail
 import com.truelayer.payments.core.domain.utils.Ok
 import com.truelayer.payments.core.domain.utils.Outcome
-import com.truelayer.payments.ui.models.PaymentContext
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.truelayer.payments.ui.screens.processor.ProcessorContext.PaymentContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import java.util.*
+import java.util.UUID
 
 /**
  * Utility class used to create payments via the example-mobile-backedn for testing the integrations

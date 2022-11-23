@@ -10,12 +10,12 @@ import com.truelayer.payments.core.domain.configuration.HttpLoggingLevel
 object Configuration {
     @JvmStatic
     val httpConfig = HttpConnectionConfiguration(
-        timeoutMs = 5000,
+        timeoutMs = 45000,
         httpDebugLoggingLevel = HttpLoggingLevel.Body
     )
 
     @JvmStatic
-    val environment = Environment.DEVELOPMENT
+    val environment = Environment.SANDBOX
 
     @JvmStatic
     val paymentType = PaymentType.GBP

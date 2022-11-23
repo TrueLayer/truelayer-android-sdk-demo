@@ -8,12 +8,12 @@ def localProperties = new Properties()
 localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.truelayer.demo"
         minSdk 24
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -51,6 +51,7 @@ android {
             pickFirsts += ['META-INF/LICENSE-MIT']
         }
     }
+    namespace 'com.truelayer.demo'
 }
 
 dependencies {
@@ -62,6 +63,7 @@ dependencies {
     implementation "androidx.activity:activity-compose:$activity_compose_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
     implementation "com.google.android.material:material:$material_version"
+    implementation "androidx.compose.material3:material3:$material3_compose_version"
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
@@ -69,5 +71,5 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$json_serialization_version"
     implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$retrofit2_kotlinx_serialization"
 
-    implementation "com.truelayer.payments:ui:1.1.0"
+    implementation "com.truelayer.payments:ui:2.0.1"
 }

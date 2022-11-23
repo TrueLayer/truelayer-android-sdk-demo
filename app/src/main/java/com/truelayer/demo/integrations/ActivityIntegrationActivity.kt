@@ -11,8 +11,8 @@ import com.truelayer.demo.payments.PaymentContextProvider
 import com.truelayer.payments.core.domain.utils.Fail
 import com.truelayer.payments.core.domain.utils.Ok
 import com.truelayer.payments.ui.TrueLayerUI
-import com.truelayer.payments.ui.screens.coordinator.FlowCoordinatorActivityContract
-import com.truelayer.payments.ui.screens.coordinator.FlowCoordinatorResult
+import com.truelayer.payments.ui.screens.processor.ProcessorActivityContract
+import com.truelayer.payments.ui.screens.processor.ProcessorResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -50,7 +50,7 @@ class ActivityIntegrationActivity : Activity() {
         when (val paymentContext = paymentContextProvider.getPaymentContext()) {
             is Ok -> {
                 // Create an intent with the payment context to start the payment flow
-                val intent = FlowCoordinatorActivityContract().createIntent(
+                val intent = ProcessorActivityContract().createIntent(
                     this@ActivityIntegrationActivity,
                     paymentContext.value
                 )
@@ -70,7 +70,7 @@ class ActivityIntegrationActivity : Activity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         // Retrieve the result of the payment flow
-        val result = FlowCoordinatorResult.unwrapResult(data)
+        val result = ProcessorResult.unwrapResult(data)
         Toast.makeText(this, result.toString(), Toast.LENGTH_LONG).show()
     }
 }
