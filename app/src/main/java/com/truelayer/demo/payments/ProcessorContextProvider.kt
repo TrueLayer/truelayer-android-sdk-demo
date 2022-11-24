@@ -32,6 +32,8 @@ class ProcessorContextProvider(
 ) {
 
     // The redirect URI of this demo app that is specified in the AndroidManifest.xml
+    // The same URI needs to be also registered in the TrueLayer console 
+    // in `App Settings` as `Allowed redirect URIs`.
     private val redirectUri: String = "truelayer://demo"
 
     private val jsonDefault = Json {
