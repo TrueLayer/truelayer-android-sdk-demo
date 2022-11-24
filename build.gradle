@@ -10,6 +10,7 @@ buildscript {
         material_version = "1.8.0-alpha02"
         retrofit2_kotlinx_serialization = "0.8.0"
         material3_compose_version = "1.0.1"
+        desugar_jdk_libs = "1.2.2"
     }
 }// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
