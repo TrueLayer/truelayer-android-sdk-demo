@@ -10,10 +10,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -21,16 +22,16 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 
 /**
- * UI component to represent and integration of the SDK and launch it's respective Activity
+ * UI component to represent an integration of the SDK and launch it's respective Activity
  */
-@ExperimentalMaterialApi
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImplementationItem(
     name: String,
     image: Painter,
     onClick: () -> Unit
 ) = Card(
-    elevation = 0.dp,
+    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
     shape = MaterialTheme.shapes.medium,
     modifier = Modifier
         .fillMaxWidth()
@@ -54,7 +55,7 @@ fun ImplementationItem(
 
             Text(
                 text = name,
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.bodyLarge
             )
         }
     }

@@ -1,19 +1,21 @@
 package com.truelayer.demo.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
-private val DarkColorPalette = darkColors(
-    primary = Primary,
-    secondary = Secondary
+private val DarkColorPalette = darkColorScheme(
+    primary = PrimaryDark,
+    secondary = Secondary,
+    surfaceVariant = SurfaceVariantDark
 )
 
-private val LightColorPalette = lightColors(
-    primary = PrimaryDark,
-    secondary = Secondary
+private val LightColorPalette = lightColorScheme(
+    primary = Primary,
+    secondary = Secondary,
+    surfaceVariant = SurfaceVariant
 )
 
 @Composable
@@ -25,7 +27,7 @@ fun SDKDemoTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composabl
     }
 
     MaterialTheme(
-        colors = colors,
+        colorScheme = colors,
         content = content
     )
 }

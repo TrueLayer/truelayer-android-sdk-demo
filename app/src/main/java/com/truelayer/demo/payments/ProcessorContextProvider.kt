@@ -1,21 +1,19 @@
 package com.truelayer.demo.payments
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.truelayer.demo.BuildConfig
-import com.truelayer.demo.Configuration
-import com.truelayer.demo.PaymentType
 import com.truelayer.demo.payments.api.PaymentRequest
 import com.truelayer.demo.payments.api.PaymentService
 import com.truelayer.demo.payments.api.PaymentStatus
 import com.truelayer.payments.core.domain.utils.Fail
 import com.truelayer.payments.core.domain.utils.Ok
 import com.truelayer.payments.core.domain.utils.Outcome
+import com.truelayer.payments.ui.screens.processor.ProcessorContext
+import com.truelayer.payments.ui.screens.processor.ProcessorContext.PaymentContext
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.truelayer.payments.ui.screens.processor.ProcessorContext.PaymentContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -25,16 +23,18 @@ import retrofit2.Retrofit
 import java.util.UUID
 
 /**
- * Utility class used to create payments via the example-mobile-backedn for testing the integrations
+ * Utility class used to create payments via the Payments Quickstart API for testing the integrations
  */
 @Suppress("BlockingMethodInNonBlockingContext")
-class PaymentContextProvider {
+class ProcessorContextProvider(
+    // The URI to the Payments Quickstart API
+    private val apiURL: String
+) {
 
     // The redirect URI of this demo app that is specified in the AndroidManifest.xml
+    // The same URI needs to be also registered in the TrueLayer console 
+    // in `App Settings` as `Allowed redirect URIs`.
     private val redirectUri: String = "truelayer://demo"
-
-    // The URI to the example-mobile-backend that is specified in build.gradle
-    private val mobileBackendUrl: String = BuildConfig.MOBILE_BACKEND_URI
 
     private val jsonDefault = Json {
         ignoreUnknownKeys = true
@@ -43,20 +43,27 @@ class PaymentContextProvider {
     }
 
     // Generates a payment context to be used for testing integrations
-    suspend fun getPaymentContext(): Outcome<PaymentContext, Throwable> {
+    suspend fun getProcessorContext(paymentType: PaymentType): Outcome<ProcessorContext, Throwable> {
         val service = createPaymentService()
-        val paymentRequest = createPaymentRequest()
+        val paymentRequest = createRequest()
 
         return try {
-            val payment = when (Configuration.paymentType) {
+            val payment = when (paymentType) {
                 PaymentType.GBP -> service.createGBPPayment(paymentRequest)
                 PaymentType.EUR -> service.createEuroPayment(paymentRequest)
                 PaymentType.GBP_PRESELECTED -> service.createPreSelectedProviderPayment(
                     paymentRequest
                 )
+                PaymentType.MANDATE -> service.createMandate(paymentRequest)
             }
 
-            Ok(PaymentContext(payment.id, payment.resourceToken, redirectUri))
+            val context = if (paymentType == PaymentType.MANDATE) {
+                ProcessorContext.MandateContext(payment.id, payment.resourceToken, redirectUri)
+            } else {
+                PaymentContext(payment.id, payment.resourceToken, redirectUri)
+            }
+
+            Ok(context)
         } catch (e: Exception) {
             Fail(e)
         }
@@ -64,10 +71,10 @@ class PaymentContextProvider {
 
     // Generates a payment context to be used for testing integrations and returns results with lambda
     @OptIn(DelicateCoroutinesApi::class)
-    fun getPaymentContext(callback: (Outcome<PaymentContext, Throwable>) -> Unit) {
+    fun getProcessorContext(paymentType: PaymentType, callback: (Outcome<ProcessorContext, Throwable>) -> Unit) {
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
-                callback(getPaymentContext())
+                callback(getProcessorContext(paymentType))
             }
         }
     }
@@ -84,15 +91,27 @@ class PaymentContextProvider {
         }
     }
 
-    // Creates a Retrofit service for the example-mobile-backend
+    // Gets the status of the mandate specified by the ID
+    suspend fun getMandateStatus(mandateId: String): Outcome<PaymentStatus, Throwable> {
+        val service = createPaymentService()
+
+        return try {
+            val paymentStatus = service.getMandateStatus(mandateId)
+            Ok(paymentStatus)
+        } catch (e: Exception) {
+            Fail(e)
+        }
+    }
+
+    // Creates a Retrofit service for the Payments Quickstart API
     @OptIn(ExperimentalSerializationApi::class)
     private fun createPaymentService(): PaymentService {
         val interceptor = HttpLoggingInterceptor()
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+            .setLevel(HttpLoggingInterceptor.Level.BODY)
         val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
 
         return Retrofit.Builder()
-            .baseUrl(mobileBackendUrl)
+            .baseUrl(apiURL)
             .client(client)
             .addConverterFactory(
                 jsonDefault.asConverterFactory("application/json".toMediaType())
@@ -102,7 +121,7 @@ class PaymentContextProvider {
     }
 
     // Creates a new PaymentRequest object
-    private fun createPaymentRequest(): PaymentRequest {
+    private fun createRequest(): PaymentRequest {
         return PaymentRequest(
             id = UUID.randomUUID().toString(),
             amountInMinor = "1",

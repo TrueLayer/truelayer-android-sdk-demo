@@ -16,7 +16,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.SDKDemo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,6 +25,7 @@
         </activity>
         <activity
             android:name=".payments.PaymentStatusActivity"
+            android:parentActivityName=".MainActivity"
             android:exported="true">
             <intent-filter android:label="TrueLayer Payment Status">
                 <action android:name="android.intent.action.VIEW" />
@@ -39,10 +39,22 @@
                     android:scheme="truelayer" />
             </intent-filter>
         </activity>
-        <activity android:name=".integrations.ActivityIntegrationActivity" />
-        <activity android:name=".integrations.ActivityXIntegrationActivity" />
-        <activity android:name=".integrations.ComposeIntegrationActivity" />
-        <activity android:name=".integrations.JavaIntegrationActivity" />
+        <activity
+            android:name=".integrations.ActivityIntegrationActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="@string/integration_activity"/>
+        <activity
+            android:name=".integrations.ActivityXIntegrationActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="@string/integration_activityx"/>
+        <activity
+            android:name=".integrations.ComposeIntegrationActivity"
+            android:theme="@style/Theme.SDKDemo.NoActionBar"
+            android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".integrations.JavaIntegrationActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="@string/integration_java"/>
     </application>
 
 </manifest>

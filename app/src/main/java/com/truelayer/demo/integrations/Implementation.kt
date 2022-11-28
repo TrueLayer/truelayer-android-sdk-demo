@@ -1,6 +1,5 @@
 package com.truelayer.demo.integrations
 
-import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 
@@ -10,6 +9,5 @@ import androidx.annotation.StringRes
 data class Implementation(
     @StringRes val name: Int,
     @DrawableRes val icon: Int,
-    val activity: Class<*>,
-    val data: Uri? = null
+    val activity: Class<*>
 )
