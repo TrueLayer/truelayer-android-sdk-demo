@@ -5,7 +5,7 @@
 <br>  
 
 # TrueLayer Android SDK Demo
-This project provides examples for integrating the [TrueLayer Android SDK](https://github.com/TrueLayer/truelayer-android-sdk). Check out the [integration guide](https://docs.truelayer.com/docs/android-sdk-for-payments-v3) for more details.
+This project provides examples for integrating the TrueLayer Android SDK. Check out the [integration guide](https://docs.truelayer.com/docs/android-sdk-for-payments-v3) for more details.
 
 ## Before you begin
 Register `truelayer://demo` as a `redirect_uri` in your [developer console](https://console.truelayer.com). This is used at the end of the payment journey to redirect back to this app.
