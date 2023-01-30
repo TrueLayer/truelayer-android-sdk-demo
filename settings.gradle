@@ -1,0 +1,32 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    
+    def localProperties = new Properties()
+    try {
+        localProperties.load(new FileInputStream("local.properties"))
+    } catch(Exception e) {
+        println("File local.properties is not available. Fetching from truelayer.jfrog.io" +
+                " will not be possible.")
+    }
+
+    repositories {
+        maven {
+            url 'https://s01.oss.sonatype.org/content/groups/staging'
+            content {
+                // this repository *only* contains artifacts with group "com.truelayer"
+                includeGroupByRegex "com\\.truelayer.*"
+            }
+        }
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "SDK Demo"
+include ':app'

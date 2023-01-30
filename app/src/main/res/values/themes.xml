@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.SDKDemo" parent="Theme.Material3.DayNight">
+        <item name="colorPrimary">@color/tl_blue</item>
+        <item name="colorPrimaryDark">@color/tl_blue_dark</item>
+    </style>
+
+    <style name="Theme.SDKDemo.NoActionBar" parent="Theme.SDKDemo">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+</resources>

@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">TL SDK Demo</string>
+    <string name="integration_compose">Compose Integration</string>
+    <string name="integration_activityx">ActivityX Integration</string>
+    <string name="integration_activity">Activity Integration</string>
+    <string name="integration_java">Java Integration</string>
+    <string name="button_launch">Launch Flow</string>
+    <string name="status_title">Status</string>
+    <string name="config_api_label">Enter your Payments Quickstart URL</string>
+    <string name="processor_context_error">Unable to get processor context: %1s</string>
+</resources>
