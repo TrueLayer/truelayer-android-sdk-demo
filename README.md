@@ -22,8 +22,10 @@ Payments Quickstart is a project that will allow you to instantly get up to spee
 <p align="center">
     <img height="300px" src="./screenshot.png" />
 </p>
-The app allows you to configure your use of the Payments Quickstart API within the app. You'll need to add the URI to the API in the required field and select
-the correct environment. And you can change the type of payment that is created.
+The app allows you to configure your use of the Payments Quickstart API within the app. Simply add the URI to the API in the field on the app's main screen and select
+your environment from the dropdown.
+
+You can also select between launching flows for payments in different currencies or mandates.
 
 ## How does the payment flow with the SDK works?
 
