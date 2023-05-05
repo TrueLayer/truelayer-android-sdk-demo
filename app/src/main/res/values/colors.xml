@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="tl_blue">#058ed8</color>
-    <color name="tl_blue_dark">#066da5</color>
+    <!-- Brand Colors -->
+    <color name="magenta">#F33B92</color>
+    <color name="charcoal">#1F1F25</color>
+    <color name="lavender">#BBB9FB</color>
+    <color name="lavender_70">#CFCEFC</color>
+    <color name="lavender_110">#9B9BF3</color>
+    <color name="lavender_130">#7E7EE7</color>
+    <color name="semantic_red">#FF3855</color>
+    <color name="semantic_green">#00BF89</color>
 </resources>
