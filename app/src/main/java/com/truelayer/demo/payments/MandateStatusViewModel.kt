@@ -16,8 +16,7 @@ import kotlinx.coroutines.launch
 /**
  * ViewModel for fetching the Payment's status
  */
-class PaymentStatusViewModel(
-    private val paymentId: String?,
+class MandateStatusViewModel(
     private val mandateId: String?,
     private val apiUrl: String,
     private val retryInterval: Long = 2_000,
@@ -31,34 +30,6 @@ class PaymentStatusViewModel(
 
     private val _error = MutableStateFlow("")
     val error: StateFlow<String> = _error
-
-    // Polls the payment status API to receive updates to the payment
-    fun pollPaymentStatus() {
-        _status.tryEmit(PaymentStatus.Status.AUTHORIZING)
-        viewModelScope.launch(dispatcher) {
-            var retryCount = 5
-            var canRetry = true
-            while (canRetry) {
-                retryCount -= 1
-                canRetry = retryCount > 0
-                when (val paymentStatus = processorContextProvider.getPaymentStatus(paymentId!!)) {
-                    is Ok -> {
-                        if (paymentStatus.value.status != PaymentStatus.Status.AUTHORIZED && canRetry) {
-                            delay(retryInterval)
-                            continue
-                        } else {
-                            _status.emit(paymentStatus.value.status)
-                            break
-                        }
-                    }
-                    is Fail -> {
-                        _error.emit(paymentStatus.error.localizedMessage ?: "Unknown Error")
-                        break
-                    }
-                }
-            }
-        }
-    }
 
     // Polls the mandate status API to receive updates to the payment
     fun pollMandateStatus() {
@@ -90,13 +61,11 @@ class PaymentStatusViewModel(
 }
 
 @Suppress("UNCHECKED_CAST")
-internal fun paymentStatusViewModel(
-    paymentId: String?,
+internal fun mandateStatusViewModel(
     mandateId: String?,
     apiUrl: String
 ) = object : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T = PaymentStatusViewModel(
-        paymentId = paymentId,
+    override fun <T : ViewModel> create(modelClass: Class<T>): T = MandateStatusViewModel(
         mandateId = mandateId,
         apiUrl = apiUrl
     ) as T

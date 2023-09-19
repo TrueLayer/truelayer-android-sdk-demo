@@ -25,14 +25,13 @@ import java.util.UUID
 /**
  * Utility class used to create payments via the Payments Quickstart API for testing the integrations
  */
-@Suppress("BlockingMethodInNonBlockingContext")
 class ProcessorContextProvider(
     // The URI to the Payments Quickstart API
-    private val apiURL: String
+    private val apiURL: String,
 ) {
 
     // The redirect URI of this demo app that is specified in the AndroidManifest.xml
-    // The same URI needs to be also registered in the TrueLayer console 
+    // The same URI needs to be also registered in the TrueLayer console
     // in `App Settings` as `Allowed redirect URIs`.
     private val redirectUri: String = "truelayer://demo"
 
