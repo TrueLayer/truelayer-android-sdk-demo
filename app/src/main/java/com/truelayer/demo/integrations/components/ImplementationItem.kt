@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 /**
  * UI component to represent an integration of the SDK and launch it's respective Activity
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImplementationItem(
     name: String,

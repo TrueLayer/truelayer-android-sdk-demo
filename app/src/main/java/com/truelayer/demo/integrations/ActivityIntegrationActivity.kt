@@ -54,7 +54,7 @@ class ActivityIntegrationActivity : Activity() {
     private suspend fun launchPaymentFlow() {
         val paymentType = PrefUtils.getPaymentType(this)
         // Create a payment context
-        when (val processorContext = processorContextProvider.getProcessorContext(paymentType)) {
+        when (val processorContext = processorContextProvider.getProcessorContext(paymentType, this)) {
             is Ok -> {
                 // Create an intent with the payment context to start the payment flow
                 val intent = ProcessorActivityContract().createIntent(

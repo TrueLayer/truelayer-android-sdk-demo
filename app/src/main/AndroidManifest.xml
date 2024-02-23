@@ -25,6 +25,7 @@
         </activity>
         <activity
             android:name=".payments.PaymentStatusActivity"
+            android:theme="@style/Theme.SDKDemo.NoActionBar"
             android:parentActivityName=".MainActivity"
             android:exported="true">
             <intent-filter android:label="TrueLayer Payment Status">

@@ -80,7 +80,7 @@ class ComposeIntegrationActivity : AppCompatActivity() {
             var processorContext by remember { mutableStateOf<ProcessorContext?>(null) }
             var error by remember { mutableStateOf<String?>(null) }
             LaunchedEffect(true) {
-                processorContextProvider.getProcessorContext(paymentType)
+                processorContextProvider.getProcessorContext(paymentType, this@ComposeIntegrationActivity)
                     .onOk { processorContext = it }
                     .onError { error = it.localizedMessage }
             }
