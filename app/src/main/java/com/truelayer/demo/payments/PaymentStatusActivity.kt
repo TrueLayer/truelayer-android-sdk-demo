@@ -3,34 +3,13 @@ package com.truelayer.demo.payments
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Error
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.truelayer.demo.R
-import com.truelayer.demo.payments.api.PaymentStatus
+import androidx.compose.material3.TextButton
 import com.truelayer.demo.utils.PrefUtils
 import com.truelayer.payments.core.utils.extractTrueLayerRedirectParams
-import com.truelayer.payments.ui.screens.processor.ResultProcessor
-import com.truelayer.payments.ui.screens.processor.ResultProcessorContext
+import com.truelayer.payments.ui.screens.processor.Processor
 import com.truelayer.payments.ui.theme.Theme
 import com.truelayer.payments.ui.theme.stackNavigation
 
@@ -44,10 +23,10 @@ class PaymentStatusActivity : AppCompatActivity() {
 
         // Extract the payment/mandate parameters from the URL
         val params = intent.data.extractTrueLayerRedirectParams()
+        val processorContext = PrefUtils.getProcessorContext(this)
 
         setContent {
-            val paymentId = params["payment_id"]
-            val mandateId = params["mandate_id"]
+            val resourceId = params["payment_id"] ?: params["mandate_id"]
 
             val activity = this
 
@@ -56,11 +35,10 @@ class PaymentStatusActivity : AppCompatActivity() {
                     stackNavigation(current, transition, direction)
                 }
             ) {
-                if (paymentId != null) {
-                    // If this activity is launched at the end of a payment creation flow then you can use
-                    // the payment result screen to fetch and display the result
-                    ResultProcessor(
-                        resultContext = ResultProcessorContext(paymentId),
+                if(resourceId != null && processorContext != null && processorContext.id == resourceId) {
+                    // Display the payment result screen or handle any subsequent actions
+                    Processor(
+                        context = processorContext,
                         onSuccess = {
                             activity.finish()
                         },
@@ -68,67 +46,19 @@ class PaymentStatusActivity : AppCompatActivity() {
                             activity.finish()
                         }
                     )
-                } else if (mandateId != null) {
-                    // If this activity is launched at the end of a mandate flow then you will need to manually
-                    // fetch and display the status
-                    MandateStatus(mandateId)
                 }
-            }
-        }
-    }
-
-    @Composable
-    fun MandateStatus(mandateId: String) {
-        val viewModel = viewModel<MandateStatusViewModel>(
-            factory = mandateStatusViewModel(mandateId, PrefUtils.getQuickstartUrl(this))
-        )
-        val status by viewModel.status.collectAsState()
-        val error by viewModel.error.collectAsState()
-
-        // Start polling for mandate status updates
-        viewModel.pollMandateStatus()
-
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.padding(horizontal = 16.dp)
-            ) {
-                Text(text = stringResource(id = R.string.status_title), style = MaterialTheme.typography.titleMedium)
-                when (status) {
-                    PaymentStatus.Status.AUTHORIZING -> {
-                        // If the SDK has done it's work already, it will be ok
-                        // to wait for status change
-                        CircularProgressIndicator()
-                    }
-                    PaymentStatus.Status.AUTHORIZATION_REQUIRED -> {
-                        // If you encounter this state, it's most likely that the SDK didn't
-                        // get chance to do its work yet. Start the CoordinatorFlow.
-                        // If the SDK has done its work, then this state would be considered
-                        // an error.
-                        // Because we are using this view to query the state of the payment
-                        // after redirect from the bank this should never happen.
-                        Image(imageVector = Icons.Filled.Error, contentDescription = null)
-                    }
-                    PaymentStatus.Status.AUTHORIZED,
-                    PaymentStatus.Status.SETTLED,
-                    PaymentStatus.Status.EXECUTED -> {
-                        Image(
-                            imageVector = Icons.Filled.CheckCircle,
-                            colorFilter = ColorFilter.tint(Color.Green),
-                            contentDescription = null
-                        )
-                    }
-                    PaymentStatus.Status.FAILED -> {
-                        Image(imageVector = Icons.Filled.Error, contentDescription = null)
-                    }
+                else {
+                    AlertDialog(
+                        title = { Text(text = "Whoops", style = MaterialTheme.typography.titleMedium) },
+                        text = { Text(text = "Error getting payment result") },
+                        confirmButton = {
+                            TextButton(onClick = { activity.finish() }) {
+                                Text("Close")
+                            }
+                        },
+                        onDismissRequest = { activity.finish() }
+                    )
                 }
-
-                Text(text = status.toString(), style = MaterialTheme.typography.bodyLarge)
-                Text(text = error, color = Color.Red)
             }
         }
     }

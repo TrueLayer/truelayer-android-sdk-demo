@@ -10,10 +10,6 @@ import retrofit2.http.Path
  */
 interface PaymentService {
 
-    // Gets the status of a payment by ID
-    @GET("v3/payment/{id}")
-    suspend fun getPaymentStatus(@Path("id") paymentId: String): PaymentStatus
-
     // Creates a new GBP payment
     @POST("v3/payment")
     suspend fun createGBPPayment(@Body paymentRequest: PaymentRequest): Payment
@@ -25,10 +21,6 @@ interface PaymentService {
     // Creates a new GBP payment with a provider already selected
     @POST("v3/payment/provider")
     suspend fun createPreSelectedProviderPayment(@Body paymentRequest: PaymentRequest): Payment
-
-    // Gets the status of a mandate by ID
-    @GET("v3/mandate/{id}")
-    suspend fun getMandateStatus(@Path("id") mandateId: String): PaymentStatus
 
     // Creates a new GBP mandate
     @POST("v3/mandate")

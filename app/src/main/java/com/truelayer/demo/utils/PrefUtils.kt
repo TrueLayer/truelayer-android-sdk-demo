@@ -3,6 +3,9 @@ package com.truelayer.demo.utils
 import android.content.Context
 import com.truelayer.demo.payments.PaymentType
 import com.truelayer.payments.core.domain.configuration.Environment
+import com.truelayer.payments.ui.screens.processor.ProcessorContext
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.lang.IllegalArgumentException
 
 /**
@@ -67,5 +70,22 @@ object PrefUtils {
                 PaymentType.GBP
             }
         } ?: PaymentType.GBP
+    }
+
+    @JvmStatic
+    fun setProcessorContext(processorContext: ProcessorContext, context: Context) {
+        val sharedPref = context.getSharedPreferences("Settings", Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("processorContext", Json.Default.encodeToString(processorContext))
+            apply()
+        }
+    }
+
+    @JvmStatic
+    fun getProcessorContext(context: Context): ProcessorContext? {
+        val sharedPreferences = context.getSharedPreferences("Settings", Context.MODE_PRIVATE)
+        return sharedPreferences.getString("processorContext", null)?.let {
+            Json.Default.decodeFromString(it)
+        }
     }
 }

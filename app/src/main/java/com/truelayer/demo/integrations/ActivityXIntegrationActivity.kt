@@ -62,7 +62,7 @@ class ActivityXIntegrationActivity : AppCompatActivity() {
     private suspend fun launchFlow(flow: ActivityResultLauncher<ProcessorContext>) {
         val paymentType = PrefUtils.getPaymentType(this)
         // Create a payment context
-        when (val processorContext = processorContextProvider.getProcessorContext(paymentType)) {
+        when (val processorContext = processorContextProvider.getProcessorContext(paymentType, this)) {
             is Ok -> {
                 // Start the payment flow
                 flow.launch(processorContext.value)

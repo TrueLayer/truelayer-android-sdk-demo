@@ -63,16 +63,16 @@ public class JavaIntegrationActivity extends AppCompatActivity {
     private void launchFlow(ActivityResultLauncher<ProcessorContext> flow) {
         PaymentType paymentType = PrefUtils.getPaymentType(this);
         // Create a payment context
-        processorContextProvider.getProcessorContext(paymentType, contextOutcome -> {
-            if(contextOutcome instanceof Ok) {
+        processorContextProvider.getProcessorContext(paymentType, this, outcome -> {
+            if(outcome instanceof Ok) {
                 // Start the payment flow
-                flow.launch(((Ok<ProcessorContext>) contextOutcome).getValue());
+                flow.launch(((Ok<ProcessorContext>) outcome).getValue());
             }
-            else if(contextOutcome instanceof Fail) {
+            else if(outcome instanceof Fail) {
                 // Display error if payment context creation failed
                 Toast.makeText(
                         this,
-                        getString(R.string.processor_context_error, ((Fail<?>) contextOutcome).getError()),
+                        getString(R.string.processor_context_error, ((Fail<?>) outcome).getError()),
                         Toast.LENGTH_LONG
                     ).show();
             }
