@@ -12,8 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -44,7 +43,6 @@ import com.truelayer.payments.core.domain.configuration.Environment
  */
 class MainActivity : AppCompatActivity() {
 
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -102,7 +100,7 @@ class MainActivity : AppCompatActivity() {
                             TextWithDropdownMenu(
                                 modifier = Modifier.weight(1f),
                                 label = paymentType.name,
-                                dropdownItems = PaymentType.values().map { it.name to it },
+                                dropdownItems = PaymentType.entries.map { it.name to it },
                                 onClick = {
                                     paymentType = it
                                     PrefUtils.setPaymentType(it, this@MainActivity)
@@ -112,7 +110,7 @@ class MainActivity : AppCompatActivity() {
                             TextWithDropdownMenu(
                                 modifier = Modifier.weight(1f),
                                 label = env.name,
-                                dropdownItems = Environment.values().map { it.name to it },
+                                dropdownItems = Environment.entries.map { it.name to it },
                                 onClick = {
                                     env = it
                                     PrefUtils.setEnvironment(it, this@MainActivity)
@@ -140,7 +138,10 @@ class MainActivity : AppCompatActivity() {
                                         }
                                     }
                                 )
-                                Divider(modifier = Modifier.padding(all = 4.dp), color = Color.Transparent)
+                                HorizontalDivider(
+                                    modifier = Modifier.padding(all = 4.dp),
+                                    color = Color.Transparent
+                                )
                             }
                         }
                     }

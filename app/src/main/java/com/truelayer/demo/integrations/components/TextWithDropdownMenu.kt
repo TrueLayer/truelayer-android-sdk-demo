@@ -7,8 +7,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -38,7 +39,7 @@ fun <T> TextWithDropdownMenu(
         border = BorderStroke(1.dp, Color.Gray),
         onClick = { dropdownExpanded = true }
     ) {
-        Text(text = label)
+        Text(text = label, color = MaterialTheme.colorScheme.onSurface)
         DropdownMenu(
             expanded = dropdownExpanded,
             onDismissRequest = { dropdownExpanded = false },
@@ -61,7 +62,7 @@ fun <T> TextWithDropdownMenu(
                                 textAlign = TextAlign.Center
                             )
                         }
-                        Divider()
+                        HorizontalDivider()
                     }
                 }
             }

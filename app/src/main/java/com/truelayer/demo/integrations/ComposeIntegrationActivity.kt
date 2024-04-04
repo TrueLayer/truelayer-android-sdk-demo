@@ -64,10 +64,6 @@ class ComposeIntegrationActivity : AppCompatActivity() {
                 primary = Primary,
                 error = Secondary
             ),
-            darkPalette = DarkColorDefaults.copy(
-                primary = PrimaryDark,
-                error = Secondary
-            ),
             typography = TypographyDefaults
         )
 
