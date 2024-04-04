@@ -25,7 +25,7 @@ object PrefUtils {
     @JvmStatic
     fun getQuickstartUrl(context: Context): String {
         val sharedPreferences = context.getSharedPreferences("Settings", Context.MODE_PRIVATE)
-        return sharedPreferences.getString("quickstartUrl", null) ?: ""
+        return sharedPreferences.getString("quickstartUrl", null) ?: "http://"
     }
 
     @JvmStatic
