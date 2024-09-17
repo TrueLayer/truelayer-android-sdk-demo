@@ -56,14 +56,15 @@ android {
 dependencies {
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$desugar_jdk_libs"
 
-    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation platform("androidx.compose:compose-bom:$compose_bom")
+    implementation 'androidx.core:core-ktx:1.13.1'
     implementation "androidx.appcompat:appcompat:$appcompat_version"
-    implementation "androidx.compose.ui:ui:$compose_version"
-    implementation "androidx.compose.material:material-icons-extended:$compose_icons_version"
-    implementation "androidx.activity:activity-compose:$activity_compose_version"
+    implementation "androidx.compose.ui:ui"
+    implementation "androidx.compose.material:material-icons-extended"
+    implementation "androidx.activity:activity-compose:$activity_compose"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
+    implementation "androidx.compose.material3:material3"
     implementation "com.google.android.material:material:$material_version"
-    implementation "androidx.compose.material3:material3:$material3_compose_version"
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
@@ -71,5 +72,5 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$json_serialization_version"
     implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$retrofit2_kotlinx_serialization"
 
-    implementation "com.truelayer.payments:ui:3.1.0"
+    implementation "com.truelayer.payments:ui:3.2.1"
 }
