@@ -39,9 +39,9 @@ sequenceDiagram
 	app ->> backend: Create Payment
 	backend ->> app: Processor Context
 	app ->>+ SDK: Start Processor Flow (ProcessorContext)
-	SDK ->> SDK: Execute authorizatio flow
+	SDK ->> SDK: Execute authorization flow
 
-	note left of app: Depending on the payment provider (the bank) <br/>there are two possible scenrios:<br/>redirect flow(1) or embedded flow(2).
+	note left of app: Depending on the payment provider (the bank) <br/>there are two possible scenarios:<br/>redirect flow(1) or embedded flow(2).
 
 	alt 1. Redirect flow
 	note left of app: Redirect flow involves launching<br/> the Bank app or Bank website.
@@ -53,9 +53,9 @@ sequenceDiagram
 	SDK --x- app: Notify result
 	end
 
-	loop query paymetn status
+	loop query payment status
 	note left of app: Query the payment status<br/>until payment is no longer<br/>in AUTHORISING state.
-	app ->> backend: Query payment staus
-	backend ->> app: Payment staus
+	app ->> backend: Query payment status
+	backend ->> app: Payment status
 	end
 ```
