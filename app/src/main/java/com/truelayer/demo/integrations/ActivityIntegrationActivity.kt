@@ -12,8 +12,10 @@ import com.truelayer.payments.core.domain.configuration.HttpConnectionConfigurat
 import com.truelayer.payments.core.domain.configuration.HttpLoggingLevel
 import com.truelayer.payments.core.domain.utils.Fail
 import com.truelayer.payments.core.domain.utils.Ok
+import com.truelayer.payments.core.utils.extractTrueLayerRedirectParams
 import com.truelayer.payments.ui.TrueLayerUI
 import com.truelayer.payments.ui.screens.processor.ProcessorActivityContract
+import com.truelayer.payments.ui.screens.processor.ProcessorContext
 import com.truelayer.payments.ui.screens.processor.ProcessorResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,12 +28,9 @@ import kotlinx.coroutines.withContext
 class ActivityIntegrationActivity : Activity() {
 
     private val scope = CoroutineScope(Dispatchers.IO)
-    private lateinit var processorContextProvider: ProcessorContextProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        processorContextProvider = ProcessorContextProvider(PrefUtils.getQuickstartUrl(this))
 
         val binding = ActivityIntegrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -44,6 +43,8 @@ class ActivityIntegrationActivity : Activity() {
             )
         }
 
+        tryHandleIntentWithRedirectFromBankData(intent)
+
         binding.launchButton.setOnClickListener {
             scope.launch {
                 launchPaymentFlow()
@@ -51,18 +52,40 @@ class ActivityIntegrationActivity : Activity() {
         }
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.let {
+            tryHandleIntentWithRedirectFromBankData(it)
+        }
+    }
+
+    private fun tryHandleIntentWithRedirectFromBankData(intent: Intent) {
+        val params = intent.data.extractTrueLayerRedirectParams()
+        val storedProcessorContext = PrefUtils.getProcessorContext(this)
+        if (params.isNotEmpty() && storedProcessorContext != null &&
+            (storedProcessorContext.id == params["payment_id"] || storedProcessorContext.id == params["mandate_id"])) {
+            // The user is returning from the provider app
+            // and the payment/mandate ID matches the one we have stored
+            // so we can fetch the payment status
+            startPaymentActivity(storedProcessorContext)
+        }
+    }
+
+    private fun startPaymentActivity(processorContext: ProcessorContext) {
+        // Create an intent with the payment context to start the payment flow
+        val intent = ProcessorActivityContract().createIntent(this, processorContext)
+        // Start activity for result to receive the results of the payment flow
+        startActivityForResult(intent, 0)
+    }
+
     private suspend fun launchPaymentFlow() {
         val paymentType = PrefUtils.getPaymentType(this)
         // Create a payment context
+        val processorContextProvider = ProcessorContextProvider(PrefUtils.getQuickstartUrl(this))
         when (val processorContext = processorContextProvider.getProcessorContext(paymentType, this)) {
             is Ok -> {
-                // Create an intent with the payment context to start the payment flow
-                val intent = ProcessorActivityContract().createIntent(
-                    this@ActivityIntegrationActivity,
-                    processorContext.value
-                )
-                // Start activity for result to receive the results of the payment flow
-                startActivityForResult(intent, 0)
+                PrefUtils.setIntegrationType(PrefUtils.IntegrationType.ACTIVITY, this@ActivityIntegrationActivity)
+                startPaymentActivity(processorContext.value)
             }
             is Fail -> withContext(Dispatchers.Main) {
                 // Display error if payment context creation failed
