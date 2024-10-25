@@ -199,9 +199,9 @@ android {
 To add the SDK to your project, simply include TrueLayer Payments SDK to your dependencies.
 
 ```groovy
-coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.0.4"
+coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.1.2"
 // Add to your projects `build.gradle`.
-implementation "com.truelayer.payments:ui:3.1.0"
+implementation "com.truelayer.payments:ui:3.8.0"
 ```
 
 ## Step 2: Initialise the SDK
