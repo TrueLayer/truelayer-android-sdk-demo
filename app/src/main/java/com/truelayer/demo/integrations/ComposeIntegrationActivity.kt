@@ -77,7 +77,10 @@ class ComposeIntegrationActivity : AppCompatActivity() {
             var error by remember { mutableStateOf<String?>(null) }
             LaunchedEffect(true) {
                 processorContextProvider.getProcessorContext(paymentType, this@ComposeIntegrationActivity)
-                    .onOk { processorContext = it }
+                    .onOk {
+                        processorContext = it
+                        PrefUtils.setIntegrationType(PrefUtils.IntegrationType.COMPOSE, this@ComposeIntegrationActivity)
+                    }
                     .onError { error = it.localizedMessage }
             }
             Theme(

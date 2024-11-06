@@ -27,6 +27,9 @@ your environment from the dropdown.
 
 You can also select between launching flows for payments in different currencies or mandates.
 
+ 
+## :warning: **For SDK version 3.8.0+ go [here](./MigrateTo3.8.0.md)** :warning:
+
 ## How does the payment flow with the SDK works?
 
 ```mermaid

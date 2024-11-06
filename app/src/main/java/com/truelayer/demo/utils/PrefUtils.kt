@@ -4,6 +4,7 @@ import android.content.Context
 import com.truelayer.demo.payments.PaymentType
 import com.truelayer.payments.core.domain.configuration.Environment
 import com.truelayer.payments.ui.screens.processor.ProcessorContext
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.lang.IllegalArgumentException
@@ -87,5 +88,30 @@ object PrefUtils {
         return sharedPreferences.getString("processorContext", null)?.let {
             Json.Default.decodeFromString(it)
         }
+    }
+
+    @Serializable
+    enum class IntegrationType {
+        ACTIVITY,
+        ACTIVITY_X,
+        COMPOSE,
+        JAVA
+    }
+
+    @JvmStatic
+    fun setIntegrationType(integrationType: IntegrationType, context: Context) {
+        val sharedPref = context.getSharedPreferences("Settings", Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putString("integrationType", Json.Default.encodeToString(integrationType))
+            apply()
+        }
+    }
+
+    @JvmStatic
+    fun getIntegrationType(context: Context): IntegrationType {
+        val sharedPreferences = context.getSharedPreferences("Settings", Context.MODE_PRIVATE)
+        return sharedPreferences.getString("integrationType", null)?.let {
+            Json.Default.decodeFromString(it) ?: IntegrationType.COMPOSE
+        } ?: IntegrationType.COMPOSE
     }
 }

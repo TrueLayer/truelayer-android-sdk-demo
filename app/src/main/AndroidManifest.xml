@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SDKDemo"
         android:usesCleartextTraffic="true"
-        tools:targetApi="31">
+        tools:targetApi="34">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -46,11 +48,13 @@
             android:label="@string/integration_activity"/>
         <activity
             android:name=".integrations.ActivityXIntegrationActivity"
-            android:parentActivityName=".MainActivity"
-            android:label="@string/integration_activityx"/>
+            android:exported="true"
+            android:label="@string/integration_activityx">
+        </activity>
         <activity
             android:name=".integrations.ComposeIntegrationActivity"
             android:theme="@style/Theme.SDKDemo.NoActionBar"
+            android:launchMode="singleTask"
             android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".integrations.JavaIntegrationActivity"

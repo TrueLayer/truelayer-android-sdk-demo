@@ -31,11 +31,11 @@ android {
     }
     compileOptions {
         coreLibraryDesugaringEnabled true
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_19
+        targetCompatibility JavaVersion.VERSION_19
     }
     kotlinOptions {
-        jvmTarget = '17'
+        jvmTarget = '19'
     }
     buildFeatures {
         compose true
@@ -72,5 +72,5 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$json_serialization_version"
     implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$retrofit2_kotlinx_serialization"
 
-    implementation "com.truelayer.payments:ui:3.2.1"
+    implementation "com.truelayer.payments:ui:3.8.0"
 }
