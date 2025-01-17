@@ -30,6 +30,20 @@ You can also select between launching flows for payments in different currencies
  
 ## :warning: **For SDK version 3.8.0+ go [here](./MigrateTo3.8.0.md)** :warning:
 
+## Version 3.9.0
+
+Introduction of AIS+PIS flow for EUR payments. This allows users to select their account instead of typing in the IBAN.
+
+This version is set to use:
+- `kotlin` : `1.9.25`
+- `compose-bom` : `2024.11.00`
+- `desugaring` : `2.1.3`
+- `com.android.tools.build:gradle` : `8.7.0`
+- `gradle-8.9`
+- `targetSDK`: `35`
+- `jvmTarget`: `19`
+- `javaVersion`: `JavaVersion.VERSION_19`
+
 ## How does the payment flow with the SDK works?
 
 ```mermaid
