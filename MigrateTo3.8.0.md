@@ -27,6 +27,7 @@
 * [Processor Results - Success or Error](#processor-results---success-or-error)
   * [Error](#error)
   * [Success](#success)
+* [Version 3.9.0](#version-390)
 <!-- TOC -->
 
 ## New Features
@@ -642,3 +643,17 @@ When a success result is presented, it means that the SDK has completed its role
 - `Settled` When the funds have reached the destination.
 
 Before acting on the result of the SDK completing its process, it's important to understand [the status of the payment](https://docs.truelayer.com/docs/payment-statuses-for-payments-v3) or [mandate](https://docs.truelayer.com/docs/mandate-statuses).
+
+# Version 3.9.0
+
+Introduction of AIS+PIS flow for EUR payments. This allows users to select their account instead of typing in the IBAN.
+
+This version is set to use:
+- `kotlin` : `1.9.25`
+- `compose-bom` : `2024.11.00`
+- `desugaring` : `2.1.3`
+- `com.android.tools.build:gradle` : `8.7.0`
+- `gradle-8.9`
+- `targetSDK`: `35`
+- `jvmTarget`: `19`
+- `javaVersion`: `JavaVersion.VERSION_19`
