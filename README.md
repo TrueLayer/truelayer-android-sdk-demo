@@ -44,6 +44,15 @@ This version is set to use:
 - `jvmTarget`: `19`
 - `javaVersion`: `JavaVersion.VERSION_19`
 
+## Version 3.9.1
+
+The Java version has been downgraded from 19 to 17 to allow more flexibility for integrators.
+```
+jvmTarget = 17 
+sourceCompatibility = JavaVersion.VERSION_17 
+targetCompatibility = JavaVersion.VERSION_17
+```
+
 ## How does the payment flow with the SDK works?
 
 ```mermaid
