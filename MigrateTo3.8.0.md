@@ -667,7 +667,7 @@ sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 ```
 
-## Version 4.0.1
+# Version 4.0.1
 
 - A new, gorgeous, conversion-driven UI in parity with the 2025 TrueLayer Web Hosted Payments Page, with the following new features available automatically
   for all GBP and EUR+Ireland single payments:
