@@ -53,6 +53,54 @@ sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 ```
 
+## Version 4.0.1
+
+- A new, gorgeous, conversion-driven UI in parity with the 2025 TrueLayer Web Hosted Payments Page, with the following new features available automatically
+  for all GBP and EUR single payments:
+  - A single-screen, modern, declarative UI system under the hood, allowing for smooth transitions and overall snappier look and feel.
+  - Retries: allow your users to change bank on the fly, or retry failed payments without restarting the SDK.
+  - Cancellation screen streamlining: more insight on why users are abandoning their payments.
+  - Preselected providers for returning users: automatically select the last used provider, allowing for faster one-click payments and more engaged, better converting users.
+
+The following requests do not support the New UI and will fallback onto the legacy UI, as seen in versions 3.9.1 and below:
+- Mandates / recurring payments
+- EUR payments for countries other than Ireland
+
+Contains minor bug fixes, improvements and underlying library updates.
+The update from version 3.8.0, 3.9.x to version 4.0.1 should be seamless.
+
+This version is set to use:
+- `kotlin` : `2.1.20`
+- `compose-bom` : `2025.06.01`
+- `desugaring` : `2.1.5`
+- `androidx.datastore.datastore-preferences` : `1.1.7`
+
+Other libraries have been updated:
+
+- `androidx.activity.activity-compose` : `1.10.1`
+- `androidx.appcompat.appcompat` : `1.7.1`
+- `androidx.compose.runtime.runtime-tracing` : `1.8.3`
+- `androidx.core.core-ktx` : `1.16.0`
+- `androidx.fragment.fragment-ktx` : `1.8.8`
+- `androidx.lifecycle.lifecycle-livedata-ktx` : `2.9.1`
+- `androidx.lifecycle.lifecycle-runtime-compose-android` : `2.9.1`
+- `androidx.lifecycle.lifecycle-runtime-ktx` : `2.9.1`
+- `androidx.lifecycle.lifecycle-viewmodel-compose` : `2.9.1`
+- `androidx.lifecycle.lifecycle-viewmodel-ktx` : `2.9.1`
+- `androidx.navigation.navigation-compose` : `2.9.1`
+- `androidx.room.room-compiler` : `2.7.1`
+- `androidx.room.room-ktx` : `2.7.1`
+- `androidx.room.room-runtime` : `2.7.1`
+- `androidx.work.work-multiprocess` : `2.10.2`
+- `androidx.work.work-runtime-ktx` : `2.10.2`
+- `com.android.tools.desugar_jdk_libs` : `2.1.5`
+- `io.coil-kt.coil-compose` : `2.7.0`
+- `io.coil-kt.coil-svg` : `2.7.0`
+- `io.coil-kt.coil` : `2.7.0`
+- `org.jetbrains.kotlinx.kotlinx-coroutines-android` : `1.10.2`
+- `org.jetbrains.kotlinx.kotlinx-coroutines-core` : `1.10.2`
+- `org.jetbrains.kotlinx.kotlinx-coroutines-test` : `1.10.2`
+
 ## How does the payment flow with the SDK works?
 
 ```mermaid
