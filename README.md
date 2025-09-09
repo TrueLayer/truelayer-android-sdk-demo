@@ -56,18 +56,17 @@ targetCompatibility = JavaVersion.VERSION_17
 ## Version 4.0.1
 
 - A new, gorgeous, conversion-driven UI in parity with the 2025 TrueLayer Web Hosted Payments Page, with the following new features available automatically
-  for all GBP and EUR+Ireland single payments:
-    - A single-screen, modern, declarative UI system under the hood, allowing for smooth transitions and overall snappier look-and-feel.
-    - Retries: change bank / payment providers on the fly, or retry failed payments without restarting the SDK.
-    - Cancellation screen streamlining: more insight on why users are abandoning their payments.
-    - Provider pre-selection: automatically select the last used provider, allowing for faster one-click payments and more engaged, better converting users.
+  for all GBP and EUR single payments:
+  - A single-screen, modern, declarative UI system under the hood, allowing for smooth transitions and overall snappier look and feel.
+  - Retries: allow your users to change bank on the fly, or retry failed payments without restarting the SDK.
+  - Cancellation screen streamlining: more insight on why users are abandoning their payments.
+  - Preselected providers for returning users: automatically select the last used provider, allowing for faster one-click payments and more engaged, better converting users.
 
-Heads-up: the following requests do not support the New UI and will fallback onto the legacy UI, as seen in versions 3.9.1 and below:
+The following requests do not support the New UI and will fallback onto the legacy UI, as seen in versions 3.9.1 and below:
 - Mandates / recurring payments
-- EUR payments for countries other than Ireland-only
+- EUR payments for countries other than Ireland
 
 Contains minor bug fixes, improvements and underlying library updates.
-
 The update from version 3.8.0, 3.9.x to version 4.0.1 should be seamless.
 
 This version is set to use:
