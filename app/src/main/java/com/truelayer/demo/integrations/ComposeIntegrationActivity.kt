@@ -83,46 +83,41 @@ class ComposeIntegrationActivity : AppCompatActivity() {
                     }
                     .onError { error = it.localizedMessage }
             }
-            Theme(
-                theme = theme,
-                navigationTransition = { current, transition, direction ->
-                    stackNavigation(current, transition, direction)
+
+            when {
+                // Display any errors that occur when creating a payment/mandate
+                error != null -> {
+                    Toast.makeText(
+                        this@ComposeIntegrationActivity,
+                        stringResource(id = R.string.processor_context_error, error!!),
+                        Toast.LENGTH_LONG
+                    ).show()
+                    this@ComposeIntegrationActivity.finish()
                 }
-            ) {
-                when {
-                    // Display any errors that occur when creating a payment/mandate
-                    error != null -> {
-                        Toast.makeText(
-                            this@ComposeIntegrationActivity,
-                            stringResource(id = R.string.processor_context_error, error!!),
-                            Toast.LENGTH_LONG
-                        ).show()
-                        this@ComposeIntegrationActivity.finish()
+                // Display loading UI while payment/mandate is being created
+                processorContext == null -> {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        CircularProgressIndicator()
+                        Text("Authenticating")
                     }
-                    // Display loading UI while payment/mandate is being created
-                    processorContext == null -> {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            CircularProgressIndicator()
-                            Text("Authenticating")
-                        }
-                    }
-                    // Launch the SDK with the ProcessorContext for the payment/mandate created
-                    processorContext != null && flowResult == null -> {
-                        Processor(
-                            context = processorContext!!,
-                            onSuccess = { flowResult = it },
-                            onFailure = { flowResult = it }
-                        )
-                    }
-                    // Display the result of the payment/mandate flow
-                    flowResult != null -> {
-                        Toast.makeText(this, flowResult.toString(), Toast.LENGTH_LONG).show()
-                        this@ComposeIntegrationActivity.finish()
-                    }
+                }
+                // Launch the SDK with the ProcessorContext for the payment/mandate created
+                processorContext != null && flowResult == null -> {
+                    Processor(
+                        context = processorContext!!,
+                        theme = theme,
+                        onSuccess = { flowResult = it },
+                        onFailure = { flowResult = it }
+                    )
+                }
+                // Display the result of the payment/mandate flow
+                flowResult != null -> {
+                    Toast.makeText(this, flowResult.toString(), Toast.LENGTH_LONG).show()
+                    this@ComposeIntegrationActivity.finish()
                 }
             }
         }

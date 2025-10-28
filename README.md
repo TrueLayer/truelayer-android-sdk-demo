@@ -101,6 +101,85 @@ Other libraries have been updated:
 - `org.jetbrains.kotlinx.kotlinx-coroutines-core` : `1.10.2`
 - `org.jetbrains.kotlinx.kotlinx-coroutines-test` : `1.10.2`
 
+## Version 4.1.0
+
+Version 4.1.0 includes all the features of 4.x.x, including
+a refreshed user experience with a new, seamless UI and support for payment retries.
+
+The following new features are available automatically for all GBP single payments and EUR payments in Ireland:
+
+- A single-screen, modern, declarative UI system under the hood, allowing for smooth transitions and improved user experience.
+- Retries: allow your users to change bank on the fly, or retry failed payments without restarting the SDK.
+- Cancellation screen streamlining: more insight on why users are abandoning their payments.
+- Preselected providers for returning users: automatically select the last used provider, allowing for faster one-click payments and more engaged, better converting users.
+
+- This update contains minor bug fixes, improvements and underlying library updates.
+
+The most important version changes:
+- `Kotlin` : `2.2.20`
+- `androidx.compose.compose-bom` : `2025.10.01`
+- `gradle` : `gradle-8.13`
+
+Other library updates:
+- `androidx.activity.activity-compose` : `1.11.0`
+- `androidx.compose.runtime.runtime-tracing` : `1.9.4`
+- `androidx.core.core-ktx` : `1.17.0`
+- `androidx.fragment.fragment-ktx` : `1.8.9`
+- `androidx.fragment.fragment-testing` : `1.8.9`
+- `androidx.lifecycle.lifecycle-livedata-ktx` : `2.9.4`
+- `androidx.lifecycle.lifecycle-runtime-compose-android` : `2.9.4`
+- `androidx.lifecycle.lifecycle-runtime-ktx` : `2.9.4`
+- `androidx.lifecycle.lifecycle-viewmodel-compose` : `2.9.4`
+- `androidx.lifecycle.lifecycle-viewmodel-ktx` : `2.9.4`
+- `androidx.navigation.navigation-compose` : `2.9.5`
+- `androidx.work.work-multiprocess` : `2.11.0`
+- `androidx.work.work-runtime-ktx` : `2.11.0`
+- `com.google.android.material.material` : `1.13.0`
+
+### The new way to theme the SDK
+
+When integrating via Compose you no longer need to wrapp the `Processor` composable with `Theme`.
+The `Theme` will be applied automatically. If you want to customise the theme the `Processor` composable
+now accepts a `theme` parameter.
+It also worth mentioning that the SDK will only allow theming for approved merchants. If you are trying
+to apply a custom theme and you are not an approved merchant the SDK will fallback to the default theme.
+If you have questions about this please contact TrueLayer support.
+
+```kotlin
+// Your payments custom theme or use the provided defaults as below
+// theme is optional, if not provided default theme will be applied
+val theme = TrueLayerTheme(
+    lightPalette = LightColorDefaults,
+    darkPalette = DarkColorDefaults,
+    typography = TypographyDefaults
+)
+
+// Obtain your payment context from your backend
+val paymentContext = PaymentContext(
+    id =  "your-payment-identifier",
+    resourceToken = "payment-resource-token",
+    redirectUri = "redirect-uri-that-will-be-invoked-when-coming-back-from-bank"
+)
+
+setContent {
+    Processor(
+        context = paymentContext,
+        // theme is optional, if not provided default theme will be applied
+        theme = theme,
+        onSuccess = { successStep ->
+            // action on success
+        },
+        onFailure = { failureReason ->
+            // action on failure
+        }
+    )
+}
+```
+
+Because the SDK is using `Scaffold` and `BottomSheetScaffold` under the hood to present its UI components
+you need to make sure that you don't have nested `Scaffold` or `BottomSheetScaffold` in your app when integrating the SDK via Compose.
+Although the SDK will work the UI may and will not behave as expected.
+
 ## How does the payment flow with the SDK works?
 
 ```mermaid
