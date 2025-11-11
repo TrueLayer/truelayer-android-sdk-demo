@@ -9,8 +9,7 @@ def localProperties = new Properties()
 localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
 android {
-    compileSdk 36
-
+    compileSdk = 36
     defaultConfig {
         applicationId "com.truelayer.demo"
         minSdk 24
@@ -67,11 +66,15 @@ dependencies {
     implementation "androidx.compose.material3:material3"
     implementation "com.google.android.material:material:$material_version"
 
+    // Android Studio Preview support
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
 
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$json_serialization_version"
     implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$retrofit2_kotlinx_serialization"
 
-    implementation "com.truelayer.payments:ui:4.1.0"
+    implementation "com.truelayer.payments:ui:4.1.1"
 }

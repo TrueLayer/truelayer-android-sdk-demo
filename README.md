@@ -180,6 +180,16 @@ Because the SDK is using `Scaffold` and `BottomSheetScaffold` under the hood to 
 you need to make sure that you don't have nested `Scaffold` or `BottomSheetScaffold` in your app when integrating the SDK via Compose.
 Although the SDK will work the UI may and will not behave as expected.
 
+## 4.1.1
+
+This patch version contains bugfixes and improvements, all the libraries and version 
+and the integration method remain as with the 4.1.0.
+
+### General improvements and bug fixes
+- Improved the bottom sheet behaviour.
+- Handling edge cases of certain SDK integrations.
+- Improving user journey in some GBP payments.
+
 ## How does the payment flow with the SDK works?
 
 ```mermaid
