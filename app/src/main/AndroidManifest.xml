@@ -14,14 +14,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SDKDemo"
         android:usesCleartextTraffic="true"
-        tools:targetApi="34">
+        tools:targetApi="36">
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.SDKDemo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -45,10 +44,11 @@
         <activity
             android:name=".integrations.ActivityIntegrationActivity"
             android:parentActivityName=".MainActivity"
+            android:launchMode="singleTask"
             android:label="@string/integration_activity"/>
         <activity
             android:name=".integrations.ActivityXIntegrationActivity"
-            android:exported="true"
+            android:launchMode="singleTask"
             android:label="@string/integration_activityx">
         </activity>
         <activity
@@ -59,6 +59,7 @@
         <activity
             android:name=".integrations.JavaIntegrationActivity"
             android:parentActivityName=".MainActivity"
+            android:launchMode="singleTask"
             android:label="@string/integration_java"/>
     </application>
 

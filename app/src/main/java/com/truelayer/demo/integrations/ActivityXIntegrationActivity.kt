@@ -19,10 +19,12 @@ import com.truelayer.payments.core.utils.extractTrueLayerRedirectParams
 import com.truelayer.payments.ui.TrueLayerUI
 import com.truelayer.payments.ui.screens.processor.ProcessorActivityContract
 import com.truelayer.payments.ui.screens.processor.ProcessorContext
+import com.truelayer.payments.ui.screens.processor.ProcessorResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
 
 /**
  * Example integration of the SDK with the AndroidX AppCompat Activity component
@@ -31,6 +33,14 @@ class ActivityXIntegrationActivity : AppCompatActivity() {
 
     private val scope = CoroutineScope(Dispatchers.IO)
     private var newIntentConsumer: Consumer<Intent>? = null
+
+    private lateinit var flow: ActivityResultLauncher<ProcessorContext>
+
+    private var currentProcessorContext: ProcessorContext? = null
+
+    companion object {
+        const val TAG = "ActivityX"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,14 +60,14 @@ class ActivityXIntegrationActivity : AppCompatActivity() {
         newIntentConsumer = Consumer<Intent> { intent ->
             // extract payment id
             Log.e("ActivityXIntegrationActivity", "newIntentConsumer: $intent")
-            val flow = registerFlow()
             tryHandleIntentWithRedirectFromBankData(intent, flow)
+            this.intent = intent
         }
         newIntentConsumer?.let {
             addOnNewIntentListener(it)
         }
 
-        val flow = registerFlow()
+        flow = registerFlow()
 
         tryHandleIntentWithRedirectFromBankData(intent, flow)
 
@@ -74,6 +84,30 @@ class ActivityXIntegrationActivity : AppCompatActivity() {
         newIntentConsumer?.let { removeOnNewIntentListener(it) }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        currentProcessorContext?.let {
+            try {
+                val ctx = Json.encodeToString(it)
+                outState.putString("processorContext", ctx)
+            } catch (e: Throwable) {
+                Log.e(TAG, e.toString())
+            }
+        }
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        savedInstanceState.getString("processorContext")?.let {
+            try {
+                currentProcessorContext = Json.Default.decodeFromString(it)
+            } catch (e: Throwable) {
+                // failed to decode
+                Log.e(TAG, e.toString())
+            }
+        }
+    }
+
     private fun tryHandleIntentWithRedirectFromBankData(intent: Intent, flow: ActivityResultLauncher<ProcessorContext>) {
         val params = intent.data.extractTrueLayerRedirectParams()
         val storedProcessorContext = PrefUtils.getProcessorContext(this)
@@ -82,7 +116,12 @@ class ActivityXIntegrationActivity : AppCompatActivity() {
             // The user is returning from the provider app
             // and the payment/mandate ID matches the one we have stored
             // so we can fetch the payment status
+            currentProcessorContext = storedProcessorContext
             flow.launch(storedProcessorContext)
+        } else {
+            currentProcessorContext?.let {
+                flow.launch(it)
+            }
         }
     }
 
@@ -91,6 +130,14 @@ class ActivityXIntegrationActivity : AppCompatActivity() {
         val contract = ProcessorActivityContract()
         // Handle the result returned from the SDK at the end of the payment flow
         return registerForActivityResult(contract) {
+            if (it is ProcessorResult.Failure &&
+                it.reason == ProcessorResult.FailureReason.Unknown && it.resultShown == ProcessorResult.ResultShown.None) {
+                // in this case the Processor was terminated without setting a result
+                // this is a common case when a redirect from bank is coming
+                // and the same activity that is holding the SDK is not brought forward
+                // but a new one is created. In such case it is safe to ignore it.
+                return@registerForActivityResult
+            }
             Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
             Log.e("ActivityXIntegrationActivity", it.toString())
         }

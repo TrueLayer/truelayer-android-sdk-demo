@@ -3,6 +3,7 @@ package com.truelayer.demo.integrations
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.truelayer.demo.R
 import com.truelayer.demo.databinding.ActivityIntegrationBinding
@@ -21,6 +22,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
 
 /**
  * Example integration of the SDK with the Activity component
@@ -28,6 +30,12 @@ import kotlinx.coroutines.withContext
 class ActivityIntegrationActivity : Activity() {
 
     private val scope = CoroutineScope(Dispatchers.IO)
+
+    private var currentProcessorContext: ProcessorContext? = null
+
+    companion object {
+        const val TAG = "Activity"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +64,31 @@ class ActivityIntegrationActivity : Activity() {
         super.onNewIntent(intent)
         intent?.let {
             tryHandleIntentWithRedirectFromBankData(it)
+            this.intent = it
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        currentProcessorContext?.let {
+            try {
+                val ctx = Json.encodeToString(it)
+                outState.putString("processorContext", ctx)
+            } catch (e: Throwable) {
+                Log.e(TAG, e.toString())
+            }
+        }
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        savedInstanceState.getString("processorContext")?.let {
+            try {
+                currentProcessorContext = Json.Default.decodeFromString(it)
+            } catch (e: Throwable) {
+                // failed to decode
+                Log.e(TAG, e.toString())
+            }
         }
     }
 
@@ -68,10 +101,15 @@ class ActivityIntegrationActivity : Activity() {
             // and the payment/mandate ID matches the one we have stored
             // so we can fetch the payment status
             startPaymentActivity(storedProcessorContext)
+        } else {
+            currentProcessorContext?.let {
+                startPaymentActivity(it)
+            }
         }
     }
 
     private fun startPaymentActivity(processorContext: ProcessorContext) {
+        currentProcessorContext = processorContext
         // Create an intent with the payment context to start the payment flow
         val intent = ProcessorActivityContract().createIntent(this, processorContext)
         // Start activity for result to receive the results of the payment flow
@@ -103,6 +141,11 @@ class ActivityIntegrationActivity : Activity() {
         super.onActivityResult(requestCode, resultCode, data)
         // Extract the result of the payment flow from the intent
         val result = ProcessorResult.unwrapResult(data)
+            ?: // in this case the Processor was terminated without setting a result
+            // this is a common case when a redirect from bank is coming
+            // and the same activity that is holding the SDK is not brought forward
+            // but a new one is created. In such case it is safe to ignore it.
+            return
         Toast.makeText(this, result.toString(), Toast.LENGTH_LONG).show()
     }
 }
