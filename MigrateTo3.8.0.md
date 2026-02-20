@@ -750,6 +750,12 @@ Other library updates:
 - `androidx.work.work-runtime-ktx` : `2.11.0`
 - `com.google.android.material.material` : `1.13.0`
 
+# Version 4.1.0
+The most important version changes:
+- `androidx.compose.compose-bom` : `2025.12.00`
+- `lifecycle` : `2.10.0`
+- `gradle` : `gradle-8.13.1`
+
 ## The new way to theme the SDK
 
 When integrating via Compose you no longer need to wrapp the `Processor` composable with `Theme`.

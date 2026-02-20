@@ -194,6 +194,10 @@ and the integration method remain as with the 4.1.0.
 - Removed kotlinx-datetime library in favour of Kotlin standard library
 - Added missing analytics event
 
+## 4.1.3
+- Handling edge cases of certain SDK integrations.
+- Improving user journey in some EUR payments.
+
 ## How does the payment flow with the SDK works?
 
 ```mermaid
