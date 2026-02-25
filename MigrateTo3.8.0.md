@@ -750,11 +750,16 @@ Other library updates:
 - `androidx.work.work-runtime-ktx` : `2.11.0`
 - `com.google.android.material.material` : `1.13.0`
 
-# Version 4.1.0
+# Version 4.1.3
 The most important version changes:
 - `androidx.compose.compose-bom` : `2025.12.00`
 - `lifecycle` : `2.10.0`
 - `gradle` : `gradle-8.13.1`
+
+This is a bugfixes and improvements release, all other libraries and version remain as with the 4.1.0.
+
+# Upgrading to the 4.1.4 version of the SDK
+This is a bugfixes and improvements release, all other libraries and version remain as with the 4.1.3.
 
 ## The new way to theme the SDK
 
