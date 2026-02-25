@@ -198,6 +198,9 @@ and the integration method remain as with the 4.1.0.
 - Handling edge cases of certain SDK integrations.
 - Improving user journey in some EUR payments.
 
+## 4.1.4
+- Handling edge cases of certain SDK integrations.
+
 ## How does the payment flow with the SDK works?
 
 ```mermaid
