@@ -761,6 +761,9 @@ This is a bugfixes and improvements release, all other libraries and version rem
 # Upgrading to the 4.1.4 version of the SDK
 This is a bugfixes and improvements release, all other libraries and version remain as with the 4.1.3.
 
+# Upgrading to the 4.1.5 version of the SDK
+This is a bugfixes and improvements release, all other libraries and version remain as with the 4.1.4.
+
 ## The new way to theme the SDK
 
 When integrating via Compose you no longer need to wrapp the `Processor` composable with `Theme`.

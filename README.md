@@ -201,6 +201,9 @@ and the integration method remain as with the 4.1.0.
 ## 4.1.4
 - Handling edge cases of certain SDK integrations.
 
+## 4.1.5
+- Improved payment journey for users with multiple accounts stored.
+
 ## How does the payment flow with the SDK works?
 
 ```mermaid
