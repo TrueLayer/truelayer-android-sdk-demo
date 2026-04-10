@@ -204,6 +204,9 @@ and the integration method remain as with the 4.1.0.
 ## 4.1.5
 - Improved payment journey for users with multiple accounts stored.
 
+## 4.1.6
+- Removed autoselection of bank based purely on cross-merchant recommendation.
+
 ## How does the payment flow with the SDK works?
 
 ```mermaid
